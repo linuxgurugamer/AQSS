@@ -11,6 +11,7 @@ namespace AutoQuickSaveSystem
     internal class MainMenuGui : MonoBehaviour
     {
         private const String TITLE = "A.Q.S.S. - Automatic QuickSave System";
+        private const string TEMPLATETITLE = "Template Info";
         private const int WIDTH = 450;
         private const int CONFIG_TEXTFIELD_RIGHT_MARGIN = 165;
 
@@ -47,7 +48,7 @@ namespace AutoQuickSaveSystem
         void Start()
         {
             windowBounds = new Rect((Screen.width - WIDTH) / 2f, 100, WIDTH, 100);
-            templateInfoBounds.y = Screen.width - WIDTH;
+            templateInfoBounds = new Rect( (Screen.width - WIDTH), 100, WIDTH, 100);
             if (toolbarControl == null)
             {
                 toolbarControl = gameObject.AddComponent<ToolbarControl>();
@@ -73,11 +74,11 @@ namespace AutoQuickSaveSystem
             {
                 if (visible)
                 {
-                    this.windowBounds = ClickThruBlocker.GUILayoutWindow(this.GetInstanceID(), this.windowBounds, this.Window, TITLE, HighLogic.Skin.window);
+                    windowBounds = ClickThruBlocker.GUILayoutWindow(GetInstanceID(), windowBounds, Window, TITLE, HighLogic.Skin.window);
 
 
-                    if (showTemplateInfo)
-                        this.templateInfoBounds = ClickThruBlocker.GUILayoutWindow(this.GetInstanceID() + 1, this.windowBounds, this.ShowTemplateInfoWindow, TITLE, HighLogic.Skin.window);
+                    if (showTemplateInfo) 
+                        templateInfoBounds = ClickThruBlocker.GUILayoutWindow(this.GetInstanceID() + 11, templateInfoBounds, ShowTemplateInfoWindow, TEMPLATETITLE, HighLogic.Skin.window);
 
 
                 }
@@ -400,8 +401,8 @@ namespace AutoQuickSaveSystem
             "biome      Current biome";
         void ShowTemplateInfoWindow(int id)
         {
-
             GUILayout.BeginVertical();
+            GUILayout.Space(10);
             GUILayout.TextArea(data);
             GUILayout.Space(15);
             if (GUILayout.Button("Close"))
