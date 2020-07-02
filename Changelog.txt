@@ -1,0 +1,8 @@
+Changelog
+
+0.0.1
+	SaveOnLaunch, with template string
+	SaveConfirmationSound option
+	QuickSave ability, with template string
+	Expiration limits to quicksaves
+	Tabs on configuration page to select between Quicksave Options and Sound Options
