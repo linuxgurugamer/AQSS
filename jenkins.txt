@@ -24,7 +24,6 @@
 # and must use forward slashes
 #
 
-
 # 0:KSPVersion
 # 0:1.3
 
