@@ -399,6 +399,7 @@ namespace AutoQuickSaveSystem
             "body       Current main body\n" +
             "situation  Current situation\n" +
             "biome      Current biome";
+
         void ShowTemplateInfoWindow(int id)
         {
             GUILayout.BeginVertical();
