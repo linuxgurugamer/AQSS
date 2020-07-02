@@ -48,7 +48,7 @@ namespace AutoQuickSaveSystem
         void Start()
         {
             windowBounds = new Rect((Screen.width - WIDTH) / 2f, 100, WIDTH, 100);
-            templateInfoBounds = new Rect( (Screen.width - WIDTH), 100, WIDTH, 100);
+            templateInfoBounds = new Rect((Screen.width - WIDTH), 100, WIDTH, 100);
             if (toolbarControl == null)
             {
                 toolbarControl = gameObject.AddComponent<ToolbarControl>();
@@ -77,7 +77,7 @@ namespace AutoQuickSaveSystem
                     windowBounds = ClickThruBlocker.GUILayoutWindow(GetInstanceID(), windowBounds, Window, TITLE, HighLogic.Skin.window);
 
 
-                    if (showTemplateInfo) 
+                    if (showTemplateInfo)
                         templateInfoBounds = ClickThruBlocker.GUILayoutWindow(this.GetInstanceID() + 11, templateInfoBounds, ShowTemplateInfoWindow, TEMPLATETITLE, HighLogic.Skin.window);
 
 
