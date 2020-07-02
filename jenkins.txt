@@ -31,12 +31,10 @@
 1:AutoQuickSaveSystem, AutoQuickSaveSystem.version
 
 # 2:PROJNAME, PROJFILE, VERSIONFILE, PLUGINSFOLDER
-2:AutoQuickSaveSystem,src/KerbalHotSeat.csproj,AutoQuickSaveSystem.version,GameData/AutoQuickSaveSystem/Plugins
+2:AutoQuickSaveSystem,src/AutoQuickSaveSystem.csproj,AutoQuickSaveSystem.version,GameData/AutoQuickSaveSystem/Plugins
 
 # 3:SOURCEFILE, DESTDIR
 3:AutoQuickSaveSystem.version,GameData/AutoQuickSaveSystem
-#3:LICENSE.md,GameData/KerbalHotSeat
-#3:README.md,GameData/KerbalHotSeat
 
 # 4:SOURCDIR, DESTDIR
 #4:Textures,GameData/ManeuverQueue/Textures
