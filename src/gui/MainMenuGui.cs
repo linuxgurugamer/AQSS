@@ -215,7 +215,6 @@ namespace AutoQuickSaveSystem
             Configuration config = AutoQuickSaveSystem.configuration;
             //
             GUILayout.BeginVertical();
-            DrawTitle("Configuration");
 #if DEBUG
             GUILayout.BeginHorizontal();
             GUILayout.Label("Log:");
@@ -255,6 +254,16 @@ namespace AutoQuickSaveSystem
                         // QuickSave options
                         // quicksave on launch
                         QuickSaveOnLaunchToggle("Quicksave on launch");
+                        QuickSaveOnSceneChange("Quicksave on scene change");
+
+                        GUILayout.BeginHorizontal();
+                        GUILayout.Label("Minimum time between quicksaves (for scene changes only): ");
+                        String sMinTimeBetweenQuicksaves = GUILayout.TextField(config.minTimeBetweenQuicksaves.ToString(), STYLE_CONFIG_TEXTFIELD);
+                        GUILayout.Space(CONFIG_TEXTFIELD_RIGHT_MARGIN);
+                        config.minTimeBetweenQuicksaves = ParseInt(sMinTimeBetweenQuicksaves);
+                        GUILayout.EndHorizontal();
+
+
                         GUILayout.BeginHorizontal();
                         GUILayout.Label("Templates:");
                         GUILayout.FlexibleSpace();
@@ -427,6 +436,11 @@ namespace AutoQuickSaveSystem
         private void QuickSaveOnLaunchToggle(String text)
         {
             AutoQuickSaveSystem.configuration.quicksaveOnLaunch = GUILayout.Toggle(AutoQuickSaveSystem.configuration.quicksaveOnLaunch, " " + text);
+        }
+
+        private void QuickSaveOnSceneChange(String text)
+        {
+            AutoQuickSaveSystem.configuration.quicksaveOnSceneChange = GUILayout.Toggle(AutoQuickSaveSystem.configuration.quicksaveOnSceneChange, " " + text);
         }
 
         private void QuicksaveIntervalToggle(Configuration.QuickSave_Interval interval, String text)

@@ -32,3 +32,7 @@ An audio file can be played automatically whenever a quicksave is done.  The ava
 The currently selected audio file is highlighted with green letters.  Click the little triangle at the right of each line to hear the sound the audio file plays
 
 
+Special note regarding Quicksave on launch
+
+This depends on the initial staging event of a newly launched vessel.  What this means is that if you launch a rover and drive it away, no quicksave will be done of that launch
+

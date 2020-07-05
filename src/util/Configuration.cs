@@ -18,6 +18,10 @@ namespace AutoQuickSaveSystem
         // Quicksave options
         public QuickSave_Interval quicksaveInterval { get; set; } // ON_QUIT not valid
         public bool quicksaveOnLaunch { get; set; }
+        public bool quicksaveOnSceneChange { get; set; }
+
+        public int minTimeBetweenQuicksaves { get; set; }
+
         public String quickSaveLaunchNameTemplate { get; set; }
         public String quickSaveNameTemplate { get; set; }
         public int customQuicksaveInterval { get; set; } = 15;
@@ -42,9 +46,11 @@ namespace AutoQuickSaveSystem
 
             quicksaveInterval = QuickSave_Interval.ONCE_IN_10_MINUTES;
             quicksaveOnLaunch = true;
+            quicksaveOnSceneChange = false;
             quickSaveLaunchNameTemplate = "Y[year0]D[day0]H[hour0]M[min0]S[sec0]";
             quickSaveNameTemplate = "Y[year0]D[day0]H[hour0]M[min0]";
             customQuicksaveInterval = 15;
+            minTimeBetweenQuicksaves = 600;
 
             daysToKeepQuicksaves = 14;
             minNumberOfQuicksaves = 10;

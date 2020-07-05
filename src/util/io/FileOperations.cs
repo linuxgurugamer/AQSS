@@ -328,11 +328,17 @@ namespace AutoQuickSaveSystem
             node.AddValue("logLevel", ((int)configuration.logLevel).ToString());
 
             node.AddValue("quicksaveOnLaunch", configuration.quicksaveOnLaunch);
+            node.AddValue("quicksaveOnSceneChange", configuration.quicksaveOnSceneChange);
+
+
             node.AddValue("quickSaveLaunchNameTemplate", configuration.quickSaveLaunchNameTemplate);
 
             node.AddValue("quicksaveInterval", (int)configuration.quicksaveInterval);
             node.AddValue("quickSaveNameTemplate", configuration.quickSaveNameTemplate);
             node.AddValue("customQuicksaveInterval", configuration.customQuicksaveInterval);
+
+            
+            node.AddValue("minTimeBetweenQuicksaves", configuration.minTimeBetweenQuicksaves);
 
             node.AddValue("daysToKeepQuicksaves", configuration.daysToKeepQuicksaves);
             node.AddValue("minNumberOfQuicksaves", configuration.minNumberOfQuicksaves);
@@ -359,12 +365,18 @@ namespace AutoQuickSaveSystem
                     configuration.Init();
                     configuration.logLevel = (Log.LEVEL)int.Parse(SafeLoad(node, "logLevel", (int)configuration.logLevel));
                     configuration.quicksaveOnLaunch = bool.Parse(SafeLoad(node, "quicksaveOnLaunch", configuration.quicksaveOnLaunch));
+                    configuration.quicksaveOnSceneChange = bool.Parse(SafeLoad(node, "quicksaveOnSceneChange", configuration.quicksaveOnSceneChange));
+
+                    
                     configuration.quickSaveLaunchNameTemplate = SafeLoad(node, "quickSaveLaunchNameTemplate", configuration.quickSaveLaunchNameTemplate);
 
                     configuration.quicksaveInterval = (Configuration.QuickSave_Interval)int.Parse(SafeLoad(node, "quicksaveInterval", (int)configuration.quicksaveInterval));
 
                     configuration.quickSaveNameTemplate = SafeLoad(node, "quickSaveNameTemplate", configuration.quickSaveNameTemplate);
                     configuration.customQuicksaveInterval = int.Parse(SafeLoad(node, "customQuicksaveInterval ", configuration.customQuicksaveInterval));
+
+                    
+                    configuration.minTimeBetweenQuicksaves = int.Parse(SafeLoad(node, "minTimeBetweenQuicksaves", configuration.minTimeBetweenQuicksaves));
 
                     configuration.daysToKeepQuicksaves = int.Parse(SafeLoad(node, "daysToKeepQuicksaves", configuration.daysToKeepQuicksaves));
                     configuration.minNumberOfQuicksaves = int.Parse(SafeLoad(node, "minNumberOfQuicksaves", configuration.minNumberOfQuicksaves));
