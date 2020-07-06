@@ -7,6 +7,8 @@ using System;
 using System.IO;
 using UnityEngine;
 
+using static AutoQuickSaveSystem.AutoQuickSaveSystem;
+
 namespace AutoQuickSaveSystem
 {
     [KSPAddon(KSPAddon.Startup.Instantly, true)]
@@ -14,12 +16,12 @@ namespace AutoQuickSaveSystem
     {
 
         private static String ROOT_PATH;
-        private static String CONFIG_BASE_FOLDER;
+        //private static String CONFIG_BASE_FOLDER;
 
-        void Start()
+        protected void Start()
         {
             ROOT_PATH = KSPUtil.ApplicationRootPath;
-            CONFIG_BASE_FOLDER = ROOT_PATH + "GameData/";
+            //CONFIG_BASE_FOLDER = ROOT_PATH + "GameData/";
             FilePath = "PluginData/AutoQuickSaveSystem.cfg";
         }
         public static bool InsideApplicationRootPath(String path)
@@ -295,12 +297,12 @@ namespace AutoQuickSaveSystem
 
 
 
-        internal static String _AssemblyLocation
+        internal static String AssemblyLocation
         { get { return System.Reflection.Assembly.GetExecutingAssembly().Location; } }
 
 
-        internal static String _AssemblyFolder
-        { get { return System.IO.Path.GetDirectoryName(_AssemblyLocation); } }
+        internal static String AssemblyFolder
+        { get { return System.IO.Path.GetDirectoryName(AssemblyLocation); } }
 
         private static String _FilePath;
         /// <summary>
@@ -314,46 +316,47 @@ namespace AutoQuickSaveSystem
             set
             {
                 //Combine the Location of the assembly and the provided string. This means we can use relative or absolute paths
-                _FilePath = System.IO.Path.Combine(_AssemblyFolder + "/../PluginData/", value).Replace("\\", "/");
+                _FilePath = System.IO.Path.Combine(AssemblyFolder + "/../PluginData/", value).Replace("\\", "/");
             }
         }
         const string NODENAME = "AQSS";
 
-        public static void SaveConfiguration(Configuration configuration, String file)
+        public static void SaveConfiguration( String file)
         {
             FilePath = file;
 
             ConfigNode f = new ConfigNode();
             ConfigNode node = new ConfigNode(NODENAME);
-            node.AddValue("logLevel", ((int)configuration.logLevel).ToString());
+            node.AddValue("logLevel", ((int)Configuration.LogLevel).ToString());
 
-            node.AddValue("quicksaveOnLaunch", configuration.quicksaveOnLaunch);
-            node.AddValue("quicksaveOnSceneChange", configuration.quicksaveOnSceneChange);
+            node.AddValue("quicksaveOnLaunch", Configuration.QuicksaveOnLaunch);
+            node.AddValue("quicksaveOnSceneChange", Configuration.QuicksaveOnSceneChange);
 
 
-            node.AddValue("quickSaveLaunchNameTemplate", configuration.quickSaveLaunchNameTemplate);
+            node.AddValue("quickSaveLaunchNameTemplate", Configuration.QuickSaveLaunchNameTemplate);
 
-            node.AddValue("quicksaveInterval", (int)configuration.quicksaveInterval);
-            node.AddValue("quickSaveNameTemplate", configuration.quickSaveNameTemplate);
-            node.AddValue("customQuicksaveInterval", configuration.customQuicksaveInterval);
+            node.AddValue("quicksaveInterval", (int)Configuration.QuicksaveInterval);
+            node.AddValue("quickSaveNameTemplate", Configuration.QuickSaveNameTemplate);
+            node.AddValue("customQuicksaveInterval", Configuration.CustomQuicksaveInterval);
 
             
-            node.AddValue("minTimeBetweenQuicksaves", configuration.minTimeBetweenQuicksaves);
+            node.AddValue("minTimeBetweenQuicksaves", Configuration.MinTimeBetweenQuicksaves);
 
-            node.AddValue("daysToKeepQuicksaves", configuration.daysToKeepQuicksaves);
-            node.AddValue("minNumberOfQuicksaves", configuration.minNumberOfQuicksaves);
-            node.AddValue("maxNumberOfQuicksaves", configuration.maxNumberOfQuicksaves);
+            node.AddValue("daysToKeepQuicksaves", Configuration.DaysToKeepQuicksaves);
+            node.AddValue("minNumberOfQuicksaves", Configuration.MinNumberOfQuicksaves);
+            node.AddValue("maxNumberOfQuicksaves", Configuration.MaxNumberOfQuicksaves);
+            node.AddValue("maxNumberOfLaunchsaves", Configuration.MaxNumberOfLaunchsaves);
+            node.AddValue("maxNumberOfScenesaves", Configuration.MaxNumberOfScenesaves);
 
-
-            node.AddValue("soundOnSave", configuration.soundOnSave);
-            node.AddValue("soundLocation", configuration.soundLocation);
-            node.AddValue("minimumTimeBetweenSounds", configuration.minimumTimeBetweenSounds);
+            node.AddValue("soundOnSave", Configuration.SoundOnSave);
+            node.AddValue("soundLocation", Configuration.SoundLocation);
+            node.AddValue("minimumTimeBetweenSounds", Configuration.MinimumTimeBetweenSounds);
 
             f.AddNode(node);
             f.Save(FilePath);
         }
 
-        public static void LoadConfiguration(Configuration configuration, String file)
+        public static void LoadConfiguration(String file)
         {
             FilePath = file;
             if (File.Exists(FilePath))
@@ -362,33 +365,38 @@ namespace AutoQuickSaveSystem
                 ConfigNode node = f.GetNode(NODENAME);
                 if (node != null)
                 {
-                    configuration.Init();
-                    configuration.logLevel = (Log.LEVEL)int.Parse(SafeLoad(node, "logLevel", (int)configuration.logLevel));
-                    configuration.quicksaveOnLaunch = bool.Parse(SafeLoad(node, "quicksaveOnLaunch", configuration.quicksaveOnLaunch));
-                    configuration.quicksaveOnSceneChange = bool.Parse(SafeLoad(node, "quicksaveOnSceneChange", configuration.quicksaveOnSceneChange));
+                    Configuration.Init();
+                    Configuration.LogLevel = (KSP_Log.Log.LEVEL)int.Parse(SafeLoad(node, "logLevel", (int)Configuration.LogLevel));
+                    Configuration.QuicksaveOnLaunch = bool.Parse(SafeLoad(node, "quicksaveOnLaunch", Configuration.QuicksaveOnLaunch));
+                    Configuration.QuicksaveOnSceneChange = bool.Parse(SafeLoad(node, "quicksaveOnSceneChange", Configuration.QuicksaveOnSceneChange));
 
                     
-                    configuration.quickSaveLaunchNameTemplate = SafeLoad(node, "quickSaveLaunchNameTemplate", configuration.quickSaveLaunchNameTemplate);
+                    Configuration.QuickSaveLaunchNameTemplate = SafeLoad(node, "quickSaveLaunchNameTemplate", Configuration.QuickSaveLaunchNameTemplate);
 
-                    configuration.quicksaveInterval = (Configuration.QuickSave_Interval)int.Parse(SafeLoad(node, "quicksaveInterval", (int)configuration.quicksaveInterval));
+                    Configuration.QuicksaveInterval = (Configuration.QuickSave_Interval)int.Parse(SafeLoad(node, "quicksaveInterval", (int)Configuration.QuicksaveInterval));
 
-                    configuration.quickSaveNameTemplate = SafeLoad(node, "quickSaveNameTemplate", configuration.quickSaveNameTemplate);
-                    configuration.customQuicksaveInterval = int.Parse(SafeLoad(node, "customQuicksaveInterval ", configuration.customQuicksaveInterval));
+                    Configuration.QuickSaveNameTemplate = SafeLoad(node, "quickSaveNameTemplate", Configuration.QuickSaveNameTemplate);
+                    Configuration.CustomQuicksaveInterval = int.Parse(SafeLoad(node, "customQuicksaveInterval ", Configuration.CustomQuicksaveInterval));
 
                     
-                    configuration.minTimeBetweenQuicksaves = int.Parse(SafeLoad(node, "minTimeBetweenQuicksaves", configuration.minTimeBetweenQuicksaves));
+                    Configuration.MinTimeBetweenQuicksaves = int.Parse(SafeLoad(node, "minTimeBetweenQuicksaves", Configuration.MinTimeBetweenQuicksaves));
 
-                    configuration.daysToKeepQuicksaves = int.Parse(SafeLoad(node, "daysToKeepQuicksaves", configuration.daysToKeepQuicksaves));
-                    configuration.minNumberOfQuicksaves = int.Parse(SafeLoad(node, "minNumberOfQuicksaves", configuration.minNumberOfQuicksaves));
-                    configuration.maxNumberOfQuicksaves = int.Parse(SafeLoad(node, "maxNumberOfQuicksaves", configuration.maxNumberOfQuicksaves));
+                    Configuration.DaysToKeepQuicksaves = int.Parse(SafeLoad(node, "daysToKeepQuicksaves", Configuration.DaysToKeepQuicksaves));
+                    Configuration.MinNumberOfQuicksaves = int.Parse(SafeLoad(node, "minNumberOfQuicksaves", Configuration.MinNumberOfQuicksaves));
+                    Configuration.MaxNumberOfQuicksaves = int.Parse(SafeLoad(node, "maxNumberOfQuicksaves", Configuration.MaxNumberOfQuicksaves));
 
-                    configuration.soundOnSave = bool.Parse(SafeLoad(node, "soundOnSave", configuration.soundOnSave));
-                    configuration.soundLocation = SafeLoad(node, "soundLocation", configuration.soundLocation);
-                    configuration.minimumTimeBetweenSounds = int.Parse(SafeLoad(node, "minimumTimeBetweenSounds ", configuration.minimumTimeBetweenSounds));
+                    Configuration.MaxNumberOfLaunchsaves = int.Parse(SafeLoad(node, "maxNumberOfLaunchsaves", Configuration.MaxNumberOfLaunchsaves));
+                    Configuration.MaxNumberOfScenesaves = int.Parse(SafeLoad(node, "maxNumberOfScenesaves", Configuration.MaxNumberOfScenesaves));
+
+
+
+                    Configuration.SoundOnSave = bool.Parse(SafeLoad(node, "soundOnSave", Configuration.SoundOnSave));
+                    Configuration.SoundLocation = SafeLoad(node, "soundLocation", Configuration.SoundLocation);
+                    Configuration.MinimumTimeBetweenSounds = int.Parse(SafeLoad(node, "minimumTimeBetweenSounds ", Configuration.MinimumTimeBetweenSounds));
                 }
                 else
                 {
-                    Log.Info("no config file: default configuration");
+                    Log.Info("no config file: default Configuration");
                 }
             }
         }

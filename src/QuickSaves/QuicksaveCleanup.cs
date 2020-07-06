@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using static AutoQuickSaveSystem.AutoQuickSaveSystem;
 
 namespace AutoQuickSaveSystem
 {
@@ -28,14 +29,12 @@ namespace AutoQuickSaveSystem
             System.IO.File.Delete(fname);
         }
 
-        internal static FileEntry[] GetBackups()
+        internal static FileEntry[] GetBackups(string prefix)
         {
             SortedList<string, FileEntry> saveFiles = new SortedList<string, FileEntry>();
             var savePath = KSPUtil.ApplicationRootPath + "saves/" + HighLogic.SaveFolder;
 
-            string newName = StringTranslation.AddFormatInfo(AutoQuickSaveSystem.configuration.quickSaveNameTemplate, "", "");
-
-            var files = Directory.GetFiles(savePath, Quicksave.AUTO_QS_PREFIX + "*");
+            var files = Directory.GetFiles(savePath, prefix + "*");
             foreach (var s in files)
             {
                 DateTime dt = System.IO.File.GetLastWriteTime(s);
@@ -53,16 +52,40 @@ namespace AutoQuickSaveSystem
         {
             Log.Info("cleaning up Quicksaves");
 
+            CleanupRegularQuicksaves();
+            CleanupOtherSaves(Quicksave.LAUNCH_QS_PREFIX, Configuration.MaxNumberOfLaunchsaves);
+            CleanupOtherSaves(Quicksave.SCENE_QS_PREFIX, Configuration.MaxNumberOfScenesaves);
+        }
+
+        static void CleanupOtherSaves(string prefix, int maxNumber)
+        {
+            var backups = GetBackups(prefix);
+
+            // total number of backups before cleanup
+            int totalBackupCount = backups.Length;
+            int backupsToClean = totalBackupCount - 2 * maxNumber;
+
+
+            // backupsToClean is now set, so that minNumberOfBackups are kept
+            for (int i = 0; i < backupsToClean; i++)
+            {
+                Log.Info("Deleting backup file: " + backups[i].name);
+                DeleteQuicksave(backups[i].name);
+            }
+        }
+
+        static void CleanupRegularQuicksaves()
+        {
             // constraint for cleanup
-            int minNumberOfQuicksaves = AutoQuickSaveSystem.configuration.minNumberOfQuicksaves;
-            int maxNumberOfQuicksaves = AutoQuickSaveSystem.configuration.maxNumberOfQuicksaves;
-            int daysToKeepQuicksaves = AutoQuickSaveSystem.configuration.daysToKeepQuicksaves;
+            int minNumberOfQuicksaves = Configuration.MinNumberOfQuicksaves;
+            int maxNumberOfQuicksaves = Configuration.MaxNumberOfQuicksaves;
+            int daysToKeepQuicksaves = Configuration.DaysToKeepQuicksaves;
 
             // no cleanup (keep all quicksaves forever?)
             if (maxNumberOfQuicksaves == 0 && daysToKeepQuicksaves == 0)
                 return;
 
-            var backups = GetBackups();
+            var backups = GetBackups(Quicksave.AUTO_QS_PREFIX);
             // the point in time until backups have to be kept
             DateTime timeOfObsoleteBackups = DateTime.Now.AddDays(-daysToKeepQuicksaves);
 

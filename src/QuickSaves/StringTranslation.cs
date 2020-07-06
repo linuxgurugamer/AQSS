@@ -53,7 +53,7 @@ namespace AutoQuickSaveSystem
         {
             string lwrString = sourceString.ToLower();
 
-            int index = 0;
+            int index;
             while ((index = lwrString.IndexOf("[" + variable.ToLower() + "]")) >= 0 || (index = lwrString.IndexOf("<" + variable.ToLower() + ">")) >= 0)
             {
                 string newStr = sourceString.Substring(0, index) + value; //verify

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if false
+using System;
 using UnityEngine;
 
 namespace AutoQuickSaveSystem
@@ -95,3 +96,5 @@ namespace AutoQuickSaveSystem
     }
 
 }
+
+#endif

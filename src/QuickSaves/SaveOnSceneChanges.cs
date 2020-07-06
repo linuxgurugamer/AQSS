@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using KSP.IO;
 
+using static AutoQuickSaveSystem.AutoQuickSaveSystem;
 
 namespace AutoQuickSaveSystem.QuickSaves
 {
@@ -15,13 +16,13 @@ namespace AutoQuickSaveSystem.QuickSaves
         float MIN_BACKUP_INTERVAL = 15f;
         internal float lastBackup = 0;
 
-        void Start()
+        protected void Start()
         {
             GameEvents.onGameSceneLoadRequested.Add(this.CallbackGameSceneLoadRequested);
             DontDestroyOnLoad(this);
         }
 
-        void OnDestroy()
+        protected void OnDestroy()
         {
             GameEvents.onGameSceneLoadRequested.Remove(this.CallbackGameSceneLoadRequested);
         }
@@ -29,11 +30,14 @@ namespace AutoQuickSaveSystem.QuickSaves
         private void CallbackGameSceneLoadRequested(GameScenes scene)
         {
 
-            if (AutoQuickSaveSystem.configuration.quicksaveOnSceneChange)
+            if (Configuration.QuicksaveOnSceneChange)
             {
-                if (Time.realtimeSinceStartup - lastBackup > (Math.Max(AutoQuickSaveSystem.configuration.minTimeBetweenQuicksaves, MIN_BACKUP_INTERVAL)))
+                if (Time.realtimeSinceStartup - lastBackup > (Math.Max(Configuration.MinTimeBetweenQuicksaves, MIN_BACKUP_INTERVAL)))
                 {
-                    Quicksave.DoQuicksave(Quicksave.LAUNCH_QS_PREFIX + AutoQuickSaveSystem.configuration.quickSaveLaunchNameTemplate, "AutoQuickSave to");
+                    Log.Info("CallbackGameSceneLoadRequested doing Quicksave");
+                    SaveConfirmationSound.forceAudio = true;
+                    SaveConfirmationSound.firstCall = false;
+                    Quicksave.DoQuicksave(Quicksave.SCENE_QS_PREFIX + Configuration.QuickSaveLaunchNameTemplate, "AutoQuickSave to");
                     lastBackup = Time.realtimeSinceStartup;
                 }
             }

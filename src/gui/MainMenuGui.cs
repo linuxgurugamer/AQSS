@@ -6,6 +6,9 @@ using KSP.UI.Screens;
 using ClickThroughFix;
 using ToolbarControl_NS;
 
+//using KSP_Log;
+using static AutoQuickSaveSystem.AutoQuickSaveSystem;
+
 namespace AutoQuickSaveSystem
 {
     internal class MainMenuGui : MonoBehaviour
@@ -39,13 +42,13 @@ namespace AutoQuickSaveSystem
 
         ToolbarControl toolbarControl = null;
 
-        enum ConfigPanel { Quicksave, Sound };
+        enum ConfigPanel { Quicksave, QuickSaveIntervals, QuickSaveAging, Sound };
         ConfigPanel showPanel = ConfigPanel.Quicksave;
         bool stylesInitted = false;
         string[] files = null;
         bool showTemplateInfo = false;
 
-        void Start()
+        protected void Start()
         {
             windowBounds = new Rect((Screen.width - WIDTH) / 2f, 100, WIDTH, 100);
             templateInfoBounds = new Rect((Screen.width - WIDTH), 100, WIDTH, 100);
@@ -67,6 +70,7 @@ namespace AutoQuickSaveSystem
         {
             visible = !visible;
             files = null;
+            Configuration.Load();
         }
         protected void OnGUI()
         {
@@ -91,8 +95,6 @@ namespace AutoQuickSaveSystem
 
         private void Window(int id)
         {
-            Configuration config = AutoQuickSaveSystem.configuration;
-
             try
             {
                 GUILayout.BeginVertical();
@@ -110,6 +112,8 @@ namespace AutoQuickSaveSystem
             GUI.DragWindow();
         }
 
+#if false
+
         private void DrawTitle(String text)
         {
             GUILayout.BeginHorizontal();
@@ -117,7 +121,7 @@ namespace AutoQuickSaveSystem
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
         }
-
+#endif
 
         GUIStyle btnStyle = null;
 
@@ -187,7 +191,7 @@ namespace AutoQuickSaveSystem
 
         }
 
-
+#if false
         private int IndexOf(String s, String[] a)
         {
             try
@@ -206,24 +210,22 @@ namespace AutoQuickSaveSystem
             }
             return 0;
         }
-
+#endif
         private void DisplayConfigure()
         {
             if (!stylesInitted)
                 InitStyles();
-            //
-            Configuration config = AutoQuickSaveSystem.configuration;
-            //
+
             GUILayout.BeginVertical();
 #if DEBUG
             GUILayout.BeginHorizontal();
             GUILayout.Label("Log:");
-            LogLevelButton(Log.LEVEL.OFF, "OFF");
-            LogLevelButton(Log.LEVEL.ERROR, "ERROR");
-            LogLevelButton(Log.LEVEL.WARNING, "WARNING");
-            LogLevelButton(Log.LEVEL.INFO, "INFO");
-            LogLevelButton(Log.LEVEL.DETAIL, "DETAIL");
-            LogLevelButton(Log.LEVEL.TRACE, "TRACE");
+            LogLevelButton(KSP_Log.Log.LEVEL.OFF, "OFF");
+            LogLevelButton(KSP_Log.Log.LEVEL.ERROR, "ERROR");
+            LogLevelButton(KSP_Log.Log.LEVEL.WARNING, "WARNING");
+            LogLevelButton(KSP_Log.Log.LEVEL.INFO, "INFO");
+            LogLevelButton(KSP_Log.Log.LEVEL.DETAIL, "DETAIL");
+            LogLevelButton(KSP_Log.Log.LEVEL.TRACE, "TRACE");
             GUILayout.EndHorizontal();
 #endif
 
@@ -231,11 +233,26 @@ namespace AutoQuickSaveSystem
             GUILayout.BeginHorizontal();
 
             GUI.enabled = showPanel != ConfigPanel.Quicksave;
-            if (GUILayout.Button("Quicksave Options"))
+            if (GUILayout.Button("Options"))
             {
                 showPanel = ConfigPanel.Quicksave;
                 windowBounds.height = 0;
             }
+
+            GUI.enabled = showPanel != ConfigPanel.QuickSaveIntervals;
+            if (GUILayout.Button("Intervals"))
+            {
+                showPanel = ConfigPanel.QuickSaveIntervals;
+                windowBounds.height = 0;
+            }
+
+            GUI.enabled = showPanel != ConfigPanel.QuickSaveAging;
+            if (GUILayout.Button("Age Settings"))
+            {
+                showPanel = ConfigPanel.QuickSaveAging;
+                windowBounds.height = 0;
+            }
+
             GUI.enabled = showPanel != ConfigPanel.Sound;
             if (GUILayout.Button("Sound Options"))
             {
@@ -257,10 +274,10 @@ namespace AutoQuickSaveSystem
                         QuickSaveOnSceneChange("Quicksave on scene change");
 
                         GUILayout.BeginHorizontal();
-                        GUILayout.Label("Minimum time between quicksaves (for scene changes only): ");
-                        String sMinTimeBetweenQuicksaves = GUILayout.TextField(config.minTimeBetweenQuicksaves.ToString(), STYLE_CONFIG_TEXTFIELD);
+                        GUILayout.Label("Minimum time between quicksaves (for scene changes only, in seconds): ");
+                        String sMinTimeBetweenQuicksaves = GUILayout.TextField(Configuration.MinTimeBetweenQuicksaves.ToString(), STYLE_CONFIG_TEXTFIELD);
                         GUILayout.Space(CONFIG_TEXTFIELD_RIGHT_MARGIN);
-                        config.minTimeBetweenQuicksaves = ParseInt(sMinTimeBetweenQuicksaves);
+                        Configuration.MinTimeBetweenQuicksaves = ParseInt(sMinTimeBetweenQuicksaves);
                         GUILayout.EndHorizontal();
 
 
@@ -272,22 +289,27 @@ namespace AutoQuickSaveSystem
                         GUILayout.EndHorizontal();
 
                         GUILayout.Label("Launch template: ", STYLE_CONFIG_BACKUP_PATH_LABEL);
-                        config.quickSaveLaunchNameTemplate = GUILayout.TextField(config.quickSaveLaunchNameTemplate);
+                        Configuration.QuickSaveLaunchNameTemplate = GUILayout.TextField(Configuration.QuickSaveLaunchNameTemplate);
                         GUILayout.BeginHorizontal();
-                        string newName = StringTranslation.AddFormatInfo(AutoQuickSaveSystem.configuration.quickSaveLaunchNameTemplate, "", "");
+                        string newName = StringTranslation.AddFormatInfo(Configuration.QuickSaveLaunchNameTemplate, "", "");
                         GUILayout.Label(" ==> ");
                         GUILayout.TextField(Quicksave.LAUNCH_QS_PREFIX + newName);
                         GUILayout.EndHorizontal();
 
                         GUILayout.Label("Quicksave template: ", STYLE_CONFIG_BACKUP_PATH_LABEL);
-                        config.quickSaveNameTemplate = GUILayout.TextField(config.quickSaveNameTemplate);
+                        Configuration.QuickSaveNameTemplate = GUILayout.TextField(Configuration.QuickSaveNameTemplate);
                         GUILayout.BeginHorizontal();
-                        newName = StringTranslation.AddFormatInfo(AutoQuickSaveSystem.configuration.quickSaveNameTemplate, "", "");
+                        newName = StringTranslation.AddFormatInfo(Configuration.QuickSaveNameTemplate, "", "");
                         GUILayout.Label(" ==> ");
                         GUILayout.TextField(Quicksave.AUTO_QS_PREFIX + newName);
                         GUILayout.EndHorizontal();
+                        GUILayout.Space(20);
+                        GUILayout.EndVertical();
+                    }
+                    break;
 
-
+                case ConfigPanel.QuickSaveIntervals:
+                    {
                         GUILayout.Label("Quicksave interval: ");
 
                         QuicksaveIntervalToggle(Configuration.QuickSave_Interval.ONCE_IN_10_MINUTES, "Once in 10 minutes");
@@ -299,65 +321,89 @@ namespace AutoQuickSaveSystem
                         GUILayout.BeginHorizontal();
                         QuicksaveIntervalToggle(Configuration.QuickSave_Interval.CUSTOM, "Custom (minutes)");
                         GUILayout.FlexibleSpace();
-                        String sCustomInterval = GUILayout.TextField(config.customQuicksaveInterval.ToString(), STYLE_CONFIG_TEXTFIELD);
+                        String sCustomInterval = GUILayout.TextField(Configuration.CustomQuicksaveInterval.ToString(), STYLE_CONFIG_TEXTFIELD);
                         GUILayout.Space(CONFIG_TEXTFIELD_RIGHT_MARGIN);
-                        config.customQuicksaveInterval = ParseInt(sCustomInterval);
+                        Configuration.CustomQuicksaveInterval = ParseInt(sCustomInterval);
                         GUILayout.EndHorizontal();
 
                         GUILayout.EndVertical();
+                        GUILayout.Space(20);
+                    }
+                    break;
+
+                case ConfigPanel.QuickSaveAging:
+                    { 
                         GUILayout.Space(15);
                         GUILayout.BeginHorizontal();
                         GUILayout.Label("Days to keep quicksaves: ");
-                        String sDaysToKeepQuicksaves = GUILayout.TextField(config.daysToKeepQuicksaves.ToString(), STYLE_CONFIG_TEXTFIELD);
+                        String sDaysToKeepQuicksaves = GUILayout.TextField(Configuration.DaysToKeepQuicksaves.ToString(), STYLE_CONFIG_TEXTFIELD);
                         GUILayout.Space(CONFIG_TEXTFIELD_RIGHT_MARGIN);
-                        config.daysToKeepQuicksaves = ParseInt(sDaysToKeepQuicksaves);
+                        Configuration.DaysToKeepQuicksaves = ParseInt(sDaysToKeepQuicksaves);
                         GUILayout.EndHorizontal();
 
                         GUILayout.BeginHorizontal();
                         GUILayout.Label("Min number of quicksaves: ");
-                        String sMinNumberOfQuicksaves = GUILayout.TextField(config.minNumberOfQuicksaves.ToString(), STYLE_CONFIG_TEXTFIELD);
+                        String sMinNumberOfQuicksaves = GUILayout.TextField(Configuration.MinNumberOfQuicksaves.ToString(), STYLE_CONFIG_TEXTFIELD);
                         GUILayout.Space(CONFIG_TEXTFIELD_RIGHT_MARGIN);
-                        config.minNumberOfQuicksaves = ParseInt(sMinNumberOfQuicksaves);
+                        Configuration.MinNumberOfQuicksaves = ParseInt(sMinNumberOfQuicksaves);
                         GUILayout.EndHorizontal();
 
                         GUILayout.BeginHorizontal();
                         GUILayout.Label("Max number of quicksaves: ");
-                        String sMaxNumberOfQuicksaves = GUILayout.TextField(config.maxNumberOfQuicksaves.ToString(), STYLE_CONFIG_TEXTFIELD);
+                        String sMaxNumberOfQuicksaves = GUILayout.TextField(Configuration.MaxNumberOfQuicksaves.ToString(), STYLE_CONFIG_TEXTFIELD);
                         GUILayout.Space(CONFIG_TEXTFIELD_RIGHT_MARGIN);
-                        config.maxNumberOfQuicksaves = ParseInt(sMaxNumberOfQuicksaves);
+                        Configuration.MaxNumberOfQuicksaves = ParseInt(sMaxNumberOfQuicksaves);
                         GUILayout.EndHorizontal();
 
+                        GUILayout.Space(20);
+                        GUILayout.BeginHorizontal();
+                        GUILayout.Label("Max number of launch saves: ");
+                        String sMaxNumberOfLaunchsaves = GUILayout.TextField(Configuration.MaxNumberOfLaunchsaves.ToString(), STYLE_CONFIG_TEXTFIELD);
+                        GUILayout.Space(CONFIG_TEXTFIELD_RIGHT_MARGIN);
+                        Configuration.MaxNumberOfLaunchsaves = ParseInt(sMaxNumberOfLaunchsaves);
+                        GUILayout.EndHorizontal();
+
+                        GUILayout.BeginHorizontal();
+                        GUILayout.Label("Max number of scene change saves: ");
+                        String sMaxNumberOfScenesaves = GUILayout.TextField(Configuration.MaxNumberOfScenesaves.ToString(), STYLE_CONFIG_TEXTFIELD);
+                        GUILayout.Space(CONFIG_TEXTFIELD_RIGHT_MARGIN);
+                        Configuration.MaxNumberOfScenesaves = ParseInt(sMaxNumberOfScenesaves);
+                        GUILayout.EndHorizontal();
+
+
+                        GUILayout.EndVertical();
+                        GUILayout.Space(20);
                     }
                     break;
 
                 case ConfigPanel.Sound:
                     GUILayout.Space(15);
-                    config.soundOnSave = GUILayout.Toggle(config.soundOnSave, "Enable sound on quicksave");
+                    Configuration.SoundOnSave = GUILayout.Toggle(Configuration.SoundOnSave, "Enable sound on quicksave");
 
-                    if (config.soundOnSave)
+                    if (Configuration.SoundOnSave)
                     {
                         GUILayout.Space(15);
 
                         if (files == null)
                             files = Directory.GetFiles(KSPUtil.ApplicationRootPath + "GameData/" + Configuration.AUDIO_DIR, "*");
-                        audioListscrollPosition = GUILayout.BeginScrollView(audioListscrollPosition, GUI.skin.box, GUILayout.Height(Screen.height / 2));
+                        audioListscrollPosition = GUILayout.BeginScrollView(audioListscrollPosition, GUI.skin.box, GUILayout.Height(160));
                         int cnt = 0;
 
                         foreach (var name in files)
                         {
                             var shortName = Path.GetFileNameWithoutExtension(name);
-                            if (selectedAudio == -1 && Configuration.AUDIO_DIR + shortName == config.soundLocation)
+                            if (selectedAudio == -1 && Configuration.AUDIO_DIR + shortName == Configuration.SoundLocation)
                                 selectedAudio = cnt;
                             GUILayout.BeginHorizontal();
                             btnStyle.normal.textColor = (cnt == selectedAudio) ? Color.green : GUI.skin.button.normal.textColor;
                             if (GUILayout.Button(shortName, btnStyle, GUILayout.Width(400)))
                             {
                                 selectedAudio = cnt;
-                                config.soundLocation = Configuration.AUDIO_DIR + shortName;
+                                Configuration.SoundLocation = Configuration.AUDIO_DIR + shortName;
                             }
                             if (GUILayout.Button("►", btnStyle, GUILayout.Width(25)))
                             {
-                                Audio.initializeAudio();
+                                Audio.InitializeAudio();
                                 Audio.markerAudio.PlayOneShot(GameDatabase.Instance.GetAudioClip(Configuration.AUDIO_DIR + shortName));
                             }
                             cnt++;
@@ -371,9 +417,10 @@ namespace AutoQuickSaveSystem
             }
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
+            GUILayout.Label("(Click <B>Save Config</b> button to save) ==>");
             if (GUILayout.Button("Save Config", GUI.skin.button))
             {
-                config.Save();
+                Configuration.Save();
                 Toggle();
                 Quicksave.instance.RestartLoop();
             }
@@ -435,27 +482,27 @@ namespace AutoQuickSaveSystem
 
         private void QuickSaveOnLaunchToggle(String text)
         {
-            AutoQuickSaveSystem.configuration.quicksaveOnLaunch = GUILayout.Toggle(AutoQuickSaveSystem.configuration.quicksaveOnLaunch, " " + text);
+            Configuration.QuicksaveOnLaunch = GUILayout.Toggle(Configuration.QuicksaveOnLaunch, " " + text);
         }
 
         private void QuickSaveOnSceneChange(String text)
         {
-            AutoQuickSaveSystem.configuration.quicksaveOnSceneChange = GUILayout.Toggle(AutoQuickSaveSystem.configuration.quicksaveOnSceneChange, " " + text);
+            Configuration.QuicksaveOnSceneChange = GUILayout.Toggle(Configuration.QuicksaveOnSceneChange, " " + text);
         }
 
         private void QuicksaveIntervalToggle(Configuration.QuickSave_Interval interval, String text)
         {
-            if (GUILayout.Toggle(AutoQuickSaveSystem.configuration.quicksaveInterval == interval, " " + text))
+            if (GUILayout.Toggle(Configuration.QuicksaveInterval == interval, " " + text))
             {
-                AutoQuickSaveSystem.configuration.quicksaveInterval = interval;
+                Configuration.QuicksaveInterval = interval;
             }
         }
 
-        private void LogLevelButton(Log.LEVEL level, String text)
+        private void LogLevelButton(KSP_Log.Log.LEVEL level, String text)
         {
             if (GUILayout.Toggle(Log.GetLevel() == level, text, GUI.skin.button) && Log.GetLevel() != level)
             {
-                AutoQuickSaveSystem.configuration.logLevel = level;
+                Configuration.LogLevel = level;
                 Log.SetLevel(level);
             }
         }

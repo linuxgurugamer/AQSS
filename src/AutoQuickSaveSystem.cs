@@ -1,19 +1,24 @@
 ﻿using System;
 using UnityEngine;
 using KSP.IO;
+
+using KSP_Log;
+
 namespace AutoQuickSaveSystem
 {
     [KSPAddon(KSPAddon.Startup.SpaceCentre, true)]
     public class AutoQuickSaveSystem : MonoBehaviour
     {
-        public static Configuration configuration = new Configuration();
+        //public static Configuration Configuration = new Configuration();
 
 
         private MainMenuGui gui;
 
+        public static KSP_Log.Log Log;
+
         public AutoQuickSaveSystem()
         {
-            Log.Info("new instance of A.Q.S.S.");
+            Log.Info("A.Q.S.S.");
         }
 
         public void Awake()
@@ -26,10 +31,10 @@ namespace AutoQuickSaveSystem
         public void Start()
         {
             Log.SetLevel(Log.LEVEL.INFO);
-            Log.Info("start");
-            configuration.Load();
+            Log.Info("Start");
+            Configuration.StartUp();
             ConfigNodeIO.LoadData();
-            Log.SetLevel(configuration.logLevel);
+            Log.SetLevel(Configuration.LogLevel);
 
 
             if (this.gui == null)
@@ -46,7 +51,7 @@ namespace AutoQuickSaveSystem
             Log.Info("destroying A.Q.S.S.");
             ConfigNodeIO.excludes.Clear();
             ConfigNodeIO.excludes = null;
-            configuration.Save();
+            Configuration.Save();
         }
 
     }

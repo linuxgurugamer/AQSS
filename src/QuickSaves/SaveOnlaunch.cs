@@ -5,32 +5,29 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
+using static AutoQuickSaveSystem.AutoQuickSaveSystem;
+
 namespace AutoQuickSaveSystem
 {
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     class SaveOnlaunch : MonoBehaviour
     {
-        float MIN_BACKUP_INTERVAL = 15f;
+        static Guid lastVesselLaunched;
 
-        void Start()
+        void Awake() { GameEvents.onFlightReady.Add(onFlightReady); }
+
+        protected void OnDestroy() { GameEvents.onFlightReady.Remove(onFlightReady); }
+
+        void onFlightReady()
         {
-            GameEvents.onLaunch.Add(onLaunch);
-        }
-
-        void OnDestroy()
-        {
-            GameEvents.onLaunch.Remove(onLaunch);
-        }
-
-
-        void onLaunch(EventReport er)
-        {
-            Log.Info("GameEvents.onLaunch");
-            if (Time.realtimeSinceStartup - Quicksave.lastBackup > MIN_BACKUP_INTERVAL)
+            if (Configuration.QuicksaveOnLaunch)
             {
-                Quicksave.DoQuicksave(Quicksave.LAUNCH_QS_PREFIX + AutoQuickSaveSystem.configuration.quickSaveLaunchNameTemplate, "Launch Save to");
+                if (lastVesselLaunched != FlightGlobals.ActiveVessel.id)
+                {
+                    lastVesselLaunched = FlightGlobals.ActiveVessel.id;
+                    Quicksave.DoQuicksave(Quicksave.LAUNCH_QS_PREFIX + Configuration.QuickSaveLaunchNameTemplate, "Launch Save to");
+                }
             }
         }
     }
-
 }

@@ -3,6 +3,8 @@ using System;
 using System.Diagnostics;
 using UnityEngine;
 
+using static AutoQuickSaveSystem.AutoQuickSaveSystem;
+
 namespace AutoQuickSaveSystem
 {
     [KSPAddon(KSPAddon.Startup.MainMenu, true)]
@@ -15,53 +17,74 @@ namespace AutoQuickSaveSystem
         string SoundURL;
         Stopwatch updateStopwatch;
 
-        void Start()
+        internal static bool forceAudio = false;
+        internal static bool firstCall = true;
+
+        protected void Start()
         {
             Log.Info("SaveConfirmationSound.Start");
             DontDestroyOnLoad(this);
 
-            Audio.initializeAudio();
+            Audio.InitializeAudio();
 
             GameEvents.onGameStateSaved.Add(OnSave);
 
             updateStopwatch = new Stopwatch();
             updateStopwatch.Start();
 
-            MinimumTimeBetweenSounds = AutoQuickSaveSystem.configuration.minimumTimeBetweenSounds;
-            SoundURL = AutoQuickSaveSystem.configuration.soundLocation;
+            MinimumTimeBetweenSounds = Configuration.MinimumTimeBetweenSounds;
+            SoundURL = Configuration.SoundLocation;
         }
 
         private void OnSave(Game data)
         {
-            if (!AutoQuickSaveSystem.configuration.soundOnSave || HighLogic.CurrentGame == null || HighLogic.LoadedScene == GameScenes.MAINMENU) return;
+            if (!Configuration.SoundOnSave || HighLogic.CurrentGame == null || HighLogic.LoadedScene == GameScenes.MAINMENU) return;
 
-            Log.Info(updateStopwatch.ElapsedMilliseconds + "ms");
-
-            if ((float)updateStopwatch.ElapsedMilliseconds <= MinimumTimeBetweenSounds)
+            if (firstCall)
             {
-                Log.Info("below timer threshold");
+                firstCall = false;
                 return;
             }
+            if (!forceAudio)
+            {
+                Log.Info(updateStopwatch.ElapsedMilliseconds + "ms");
+
+                if ((float)updateStopwatch.ElapsedMilliseconds <= MinimumTimeBetweenSounds)
+                {
+                    Log.Info("below timer threshold");
+                    return;
+                }
+
+                // Check the datetime stamp of the persistent.sfs, if it is <1 min, don't quicksave
+                var persistentName = KSPUtil.ApplicationRootPath + "saves/" + HighLogic.SaveFolder + "/persistent.sfs";
+
+                DateTime lastWriteTime = System.IO.File.GetLastWriteTime(persistentName);
+                TimeSpan elapsed = DateTime.Now - lastWriteTime;
+                if (elapsed.TotalSeconds < Configuration.MinTimeBetweenQuicksaves)
+                {
+                    return;
+                }
+            }
+            forceAudio = false;
+
             updateStopwatch.Reset();
             updateStopwatch.Start();
 
-            {
-                Log.Info("And Quick Saving");
+            Log.Info("And Quick Saving");
 
-                if (!MapView.MapIsEnabled)
-                {
-                    Log.Info("In flight");
-                }
-                else
-                {
-                    Log.Info("In map");
-                    Audio.markerAudio.transform.SetParent(MapView.MapCamera.transform);
-                }
-                Log.Info("Playing Sound " + SoundURL);
-                Audio.markerAudio.PlayOneShot(GameDatabase.Instance.GetAudioClip(SoundURL));
-                updateStopwatch.Reset();
-                updateStopwatch.Start();
+            if (!MapView.MapIsEnabled)
+            {
+                Log.Info("In flight");
             }
+            else
+            {
+                Log.Info("In map");
+                Audio.markerAudio.transform.SetParent(MapView.MapCamera.transform);
+            }
+            Log.Info("Playing Sound " + SoundURL);
+            Audio.markerAudio.PlayOneShot(GameDatabase.Instance.GetAudioClip(SoundURL));
+            updateStopwatch.Reset();
+            updateStopwatch.Start();
         }
     }
 
@@ -85,7 +108,7 @@ namespace AutoQuickSaveSystem
         public static GameObject audioplayer;
         public static AudioSource markerAudio;
         static bool initted = false;
-        public static void initializeAudio()
+        public static void InitializeAudio()
         {
             if (initted) return;
             initted = true;

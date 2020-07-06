@@ -2,6 +2,8 @@
 using System.Collections;
 using UnityEngine;
 
+using static AutoQuickSaveSystem.AutoQuickSaveSystem;
+
 namespace AutoQuickSaveSystem
 {
     [KSPAddon(KSPAddon.Startup.MainMenu, true)]
@@ -13,13 +15,15 @@ namespace AutoQuickSaveSystem
         static internal float lastBackup = 0;
         internal const string LAUNCH_QS_PREFIX = "LaunchQSave_";
         internal const string AUTO_QS_PREFIX = "AutoQSave_";
+        internal const string SCENE_QS_PREFIX = "SceneQSave_";
 
-        void Start()
+        protected void Start()
         {
             instance = this;
             DontDestroyOnLoad(this);
             StartCoroutine("QuickSaveLoop");
         }
+
         internal void RestartLoop()
         {
             StopCoroutine("QuickSaveLoop");
@@ -37,7 +41,7 @@ namespace AutoQuickSaveSystem
 
                 if (!HighLogic.LoadedSceneIsEditor)
                 {
-                    switch (AutoQuickSaveSystem.configuration.quicksaveInterval)
+                    switch (Configuration.QuicksaveInterval)
                     {
                         case Configuration.QuickSave_Interval.ONCE_IN_10_MINUTES:
                             sleepTime = 10;
@@ -75,8 +79,8 @@ namespace AutoQuickSaveSystem
                             }
                             break;
                         case Configuration.QuickSave_Interval.CUSTOM:
-                            sleepTime = AutoQuickSaveSystem.configuration.customQuicksaveInterval;
-                            if (elapsed.Minutes >= AutoQuickSaveSystem.configuration.customQuicksaveInterval)
+                            sleepTime = Configuration.CustomQuicksaveInterval;
+                            if (elapsed.Minutes >= Configuration.CustomQuicksaveInterval)
                             {
                                 QuicksaveGame();
                             }
@@ -93,18 +97,29 @@ namespace AutoQuickSaveSystem
 #endif
         internal static void QuicksaveGame()
         {
-            DoQuicksave(AUTO_QS_PREFIX + AutoQuickSaveSystem.configuration.quickSaveNameTemplate, "AutoQuickSave to");
+            if (HighLogic.LoadedSceneIsEditor)
+            {
+                setTime.AddSeconds(60);
+                return;
+            }
+
+            DoQuicksave(AUTO_QS_PREFIX + Configuration.QuickSaveNameTemplate, "AutoQuickSave to");
             setTime = DateTime.Now;
         }
         internal static void DoQuicksave(string template, string message)
         {
-            String game = HighLogic.SaveFolder;
-
             string newName = StringTranslation.AddFormatInfo(template, "", dateFormat);
             if (newName != null && newName.Length > 0)
             {
+                // First we need to acquire the current game status
+                Game currentGame = HighLogic.CurrentGame.Updated();
 
-                string str = GamePersistence.SaveGame(newName, HighLogic.SaveFolder, SaveMode.BACKUP);
+                // If we are not at the space center, we have to reset the startScene to flight,
+                // because calling Updated() sets it to space center.
+                if (HighLogic.LoadedScene == GameScenes.FLIGHT)
+                    currentGame.startScene = GameScenes.FLIGHT;
+
+                string filename = GamePersistence.SaveGame(currentGame, newName, HighLogic.SaveFolder, SaveMode.OVERWRITE);
 
                 lastBackup = Time.realtimeSinceStartup;
 
