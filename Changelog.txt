@@ -1,11 +1,16 @@
 Changelog
 
+
+0.0.3
+	Added automatic saving of vessels in the editor
+	Fixed infinite loop which was locking the game up while in the editor
+
 0.0.2.1
 	Added check to prevent quicksaves from being done while in the editor
 	Added load to Configuration init
 	Fixed quicksaves not restoring to flight scene
 	Fixed prefix for scene-change quicksave
-	Fixed announcement on all scene chagnes due to game state saved
+	Fixed announcement on all scene changes due to game state saved
 	Configuration turned into static class
 	Added limits to number of launch and scene change saves
 	Added more tabs on config page to break up the options in a more organized manner

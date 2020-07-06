@@ -38,8 +38,8 @@ namespace AutoQuickSaveSystem
 
         private void OnSave(Game data)
         {
-            if (!Configuration.SoundOnSave || HighLogic.CurrentGame == null || HighLogic.LoadedScene == GameScenes.MAINMENU) return;
-
+            if (!Configuration.SoundOnSave || HighLogic.CurrentGame == null || HighLogic.LoadedScene == GameScenes.MAINMENU || HighLogic.LoadedSceneIsEditor) return;
+            Log.Info("SaveConfirmationSound.OnSave");
             if (firstCall)
             {
                 firstCall = false;
@@ -88,11 +88,11 @@ namespace AutoQuickSaveSystem
         }
     }
 
-    public class Audio
+    internal class Audio
     {
         private static Audio instance;
         private Audio() { }
-        public static Audio Instance
+        internal static Audio Instance
         {
             get
             {
@@ -104,11 +104,11 @@ namespace AutoQuickSaveSystem
             }
         }
 
-        public static bool isLoaded = false;
-        public static GameObject audioplayer;
-        public static AudioSource markerAudio;
+        internal static bool isLoaded = false;
+        internal static GameObject audioplayer;
+        internal static AudioSource markerAudio;
         static bool initted = false;
-        public static void InitializeAudio()
+        internal static void InitializeAudio()
         {
             if (initted) return;
             initted = true;

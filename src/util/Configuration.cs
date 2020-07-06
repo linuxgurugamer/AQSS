@@ -34,6 +34,10 @@ namespace AutoQuickSaveSystem
         public static int MaxNumberOfLaunchsaves { get; set; }
         public static int MaxNumberOfScenesaves { get; set; }
 
+
+        public static bool saveVesselInEditor { get; set; }
+        public static int editorTimeIntervalToSave { get; set; }
+
         // Save Confirmation Sounds option
         public static bool SoundOnSave { get; set; } = false;
         public static String SoundLocation { get; set; } = AUDIO_DIR + "click";
@@ -62,6 +66,8 @@ namespace AutoQuickSaveSystem
             MaxNumberOfQuicksaves = 50;
             MaxNumberOfLaunchsaves = 10;
             MaxNumberOfScenesaves = 10;
+            saveVesselInEditor = true;
+            editorTimeIntervalToSave = 30;
             SoundOnSave = true;
 
         }

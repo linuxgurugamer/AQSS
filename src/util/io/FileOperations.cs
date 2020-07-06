@@ -348,6 +348,9 @@ namespace AutoQuickSaveSystem
             node.AddValue("maxNumberOfLaunchsaves", Configuration.MaxNumberOfLaunchsaves);
             node.AddValue("maxNumberOfScenesaves", Configuration.MaxNumberOfScenesaves);
 
+            node.AddValue("saveVesselInEditor", Configuration.saveVesselInEditor);
+            node.AddValue("editorTimeIntervalToSave", Configuration.editorTimeIntervalToSave);
+
             node.AddValue("soundOnSave", Configuration.SoundOnSave);
             node.AddValue("soundLocation", Configuration.SoundLocation);
             node.AddValue("minimumTimeBetweenSounds", Configuration.MinimumTimeBetweenSounds);
@@ -388,7 +391,8 @@ namespace AutoQuickSaveSystem
                     Configuration.MaxNumberOfLaunchsaves = int.Parse(SafeLoad(node, "maxNumberOfLaunchsaves", Configuration.MaxNumberOfLaunchsaves));
                     Configuration.MaxNumberOfScenesaves = int.Parse(SafeLoad(node, "maxNumberOfScenesaves", Configuration.MaxNumberOfScenesaves));
 
-
+                    Configuration.saveVesselInEditor = bool.Parse(SafeLoad(node, "saveVesselInEditor", Configuration.saveVesselInEditor));
+                    Configuration.editorTimeIntervalToSave = int.Parse(SafeLoad(node, "editorTimeIntervalToSave", Configuration.editorTimeIntervalToSave));
 
                     Configuration.SoundOnSave = bool.Parse(SafeLoad(node, "soundOnSave", Configuration.SoundOnSave));
                     Configuration.SoundLocation = SafeLoad(node, "soundLocation", Configuration.SoundLocation);

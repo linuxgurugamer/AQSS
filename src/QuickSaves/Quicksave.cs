@@ -21,7 +21,7 @@ namespace AutoQuickSaveSystem
         {
             instance = this;
             DontDestroyOnLoad(this);
-            StartCoroutine("QuickSaveLoop");
+            RestartLoop();
         }
 
         internal void RestartLoop()
@@ -92,6 +92,8 @@ namespace AutoQuickSaveSystem
                     }
                     yield return new WaitForSecondsRealtime((float)(sleepTime * 60f - elapsed.TotalSeconds));
                 }
+                else
+                    yield return new WaitForSecondsRealtime(60f);
             }
         }
 #endif

@@ -42,7 +42,7 @@ namespace AutoQuickSaveSystem
 
         ToolbarControl toolbarControl = null;
 
-        enum ConfigPanel { Quicksave, QuickSaveIntervals, QuickSaveAging, Sound };
+        enum ConfigPanel { Quicksave, QuickSaveIntervals, QuickSaveAging, Editor, Sound };
         ConfigPanel showPanel = ConfigPanel.Quicksave;
         bool stylesInitted = false;
         string[] files = null;
@@ -253,6 +253,12 @@ namespace AutoQuickSaveSystem
                 windowBounds.height = 0;
             }
 
+            GUI.enabled = showPanel != ConfigPanel.Editor;
+            if (GUILayout.Button("Editor Options"))
+            {
+                showPanel = ConfigPanel.Editor;
+                windowBounds.height = 0;
+            }
             GUI.enabled = showPanel != ConfigPanel.Sound;
             if (GUILayout.Button("Sound Options"))
             {
@@ -371,6 +377,24 @@ namespace AutoQuickSaveSystem
                         GUILayout.EndHorizontal();
 
 
+                        GUILayout.EndVertical();
+                        GUILayout.Space(20);
+                    }
+                    break;
+
+                case ConfigPanel.Editor:
+                    {
+                        GUILayout.Space(15);
+                        Configuration.saveVesselInEditor = GUILayout.Toggle(Configuration.saveVesselInEditor, "Auto-save vessels in the editor");
+                        GUI.enabled = Configuration.saveVesselInEditor;
+                        GUILayout.BeginHorizontal();
+                        GUILayout.Label("Time interval between autosaves (in seconds): ");
+                        String seditorTimeToSave = GUILayout.TextField(Configuration.editorTimeIntervalToSave.ToString(), STYLE_CONFIG_TEXTFIELD);
+                        GUILayout.Space(CONFIG_TEXTFIELD_RIGHT_MARGIN);
+                        Configuration.editorTimeIntervalToSave = ParseInt(seditorTimeToSave);
+                        GUILayout.EndHorizontal();
+
+                        GUI.enabled = true;
                         GUILayout.EndVertical();
                         GUILayout.Space(20);
                     }
