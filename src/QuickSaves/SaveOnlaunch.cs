@@ -25,7 +25,7 @@ namespace AutoQuickSaveSystem
                 if (lastVesselLaunched != FlightGlobals.ActiveVessel.id)
                 {
                     lastVesselLaunched = FlightGlobals.ActiveVessel.id;
-                    Quicksave.DoQuicksave(Quicksave.LAUNCH_QS_PREFIX + Configuration.QuickSaveLaunchNameTemplate, "Launch Save to");
+                    Quicksave.DoQuicksave(Quicksave.LAUNCH_QS_PREFIX + Configuration.LaunchNameTemplate, "Launch Save to");
                 }
             }
         }

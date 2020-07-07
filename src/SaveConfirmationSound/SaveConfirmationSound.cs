@@ -81,6 +81,8 @@ namespace AutoQuickSaveSystem
                 Log.Info("In map");
                 Audio.markerAudio.transform.SetParent(MapView.MapCamera.transform);
             }
+            if (Audio.markerAudio.isPlaying)
+                return;
             Log.Info("Playing Sound " + SoundURL);
             Audio.markerAudio.PlayOneShot(GameDatabase.Instance.GetAudioClip(SoundURL));
             updateStopwatch.Reset();

@@ -15,7 +15,7 @@ namespace AutoQuickSaveSystem
         public static Log.LEVEL LogLevel { get; set; }
 
         // backup interval
-        public enum QuickSave_Interval { EACH_SAVE = 0, ONCE_IN_10_MINUTES = 1, ONCE_IN_30_MINUTES = 2, ONCE_PER_HOUR = 3, ONCE_PER_DAY = 4, ONCE_PER_WEEK = 5, ONCE_IN_2_HOURS = 6, ONCE_IN_4_HOURS = 7, CUSTOM = 8, ON_QUIT = 9 }
+        public enum QuickSave_Interval {  ONCE_IN_10_MINUTES = 1, ONCE_IN_30_MINUTES = 2, ONCE_PER_HOUR = 3, ONCE_IN_2_HOURS = 4, ONCE_IN_4_HOURS = 5, CUSTOM = 6 }
 
         // Quicksave options
         public static QuickSave_Interval QuicksaveInterval { get; set; } // ON_QUIT not valid
@@ -24,9 +24,10 @@ namespace AutoQuickSaveSystem
 
         public static int MinTimeBetweenQuicksaves { get; set; }
 
-        public static String QuickSaveLaunchNameTemplate { get; set; }
+        public static String LaunchNameTemplate { get; set; }
         public static String QuickSaveNameTemplate { get; set; }
-        public static int CustomQuicksaveInterval { get; set; } = 15;
+        public static String SceneSaveNameTemplate { get; set; }
+        public static int CustomQuicksaveInterval { get; set; }
 
         public static int DaysToKeepQuicksaves { get; set; }
         public static int MinNumberOfQuicksaves { get; set; }
@@ -48,7 +49,8 @@ namespace AutoQuickSaveSystem
             Init();
             Load();
         }
-
+        const string DEFAULT_TEMPLATE = "_[year0]_[day0] [hour0]:[min0]";
+        const string DEFAULT_LAUNCH_TEMPLATE = DEFAULT_TEMPLATE + ":[sec0]";
         public static void Init()
         {
             LogLevel = Log.LEVEL.INFO;
@@ -56,8 +58,9 @@ namespace AutoQuickSaveSystem
             QuicksaveInterval = QuickSave_Interval.ONCE_IN_10_MINUTES;
             QuicksaveOnLaunch = true;
             QuicksaveOnSceneChange = false;
-            QuickSaveLaunchNameTemplate = "Y[year0]D[day0]H[hour0]M[min0]S[sec0]";
-            QuickSaveNameTemplate = "Y[year0]D[day0]H[hour0]M[min0]";
+            LaunchNameTemplate = DEFAULT_LAUNCH_TEMPLATE;
+            QuickSaveNameTemplate = DEFAULT_TEMPLATE;
+            SceneSaveNameTemplate = DEFAULT_TEMPLATE;
             CustomQuicksaveInterval = 15;
             MinTimeBetweenQuicksaves = 600;
 

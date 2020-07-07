@@ -37,7 +37,7 @@ namespace AutoQuickSaveSystem.QuickSaves
                     Log.Info("CallbackGameSceneLoadRequested doing Quicksave");
                     SaveConfirmationSound.forceAudio = true;
                     SaveConfirmationSound.firstCall = false;
-                    Quicksave.DoQuicksave(Quicksave.SCENE_QS_PREFIX + Configuration.QuickSaveLaunchNameTemplate, "AutoQuickSave to");
+                    Quicksave.DoQuicksave(Quicksave.SCENE_QS_PREFIX + Configuration.SceneSaveNameTemplate, "AutoQuickSave to");
                     lastBackup = Time.realtimeSinceStartup;
                 }
             }

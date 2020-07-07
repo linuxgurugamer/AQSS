@@ -70,6 +70,7 @@ namespace AutoQuickSaveSystem
         {
             visible = !visible;
             files = null;
+            selectedAudio = -1;
             Configuration.Load();
         }
         protected void OnGUI()
@@ -295,9 +296,9 @@ namespace AutoQuickSaveSystem
                         GUILayout.EndHorizontal();
 
                         GUILayout.Label("Launch template: ", STYLE_CONFIG_BACKUP_PATH_LABEL);
-                        Configuration.QuickSaveLaunchNameTemplate = GUILayout.TextField(Configuration.QuickSaveLaunchNameTemplate);
+                        Configuration.LaunchNameTemplate = GUILayout.TextField(Configuration.LaunchNameTemplate);
                         GUILayout.BeginHorizontal();
-                        string newName = StringTranslation.AddFormatInfo(Configuration.QuickSaveLaunchNameTemplate, "", "");
+                        string newName = StringTranslation.AddFormatInfo(Configuration.LaunchNameTemplate, "", "");
                         GUILayout.Label(" ==> ");
                         GUILayout.TextField(Quicksave.LAUNCH_QS_PREFIX + newName);
                         GUILayout.EndHorizontal();
@@ -308,6 +309,14 @@ namespace AutoQuickSaveSystem
                         newName = StringTranslation.AddFormatInfo(Configuration.QuickSaveNameTemplate, "", "");
                         GUILayout.Label(" ==> ");
                         GUILayout.TextField(Quicksave.AUTO_QS_PREFIX + newName);
+                        GUILayout.EndHorizontal();
+
+                        GUILayout.Label("Scenesave template: ", STYLE_CONFIG_BACKUP_PATH_LABEL);
+                        Configuration.SceneSaveNameTemplate = GUILayout.TextField(Configuration.SceneSaveNameTemplate);
+                        GUILayout.BeginHorizontal();
+                        newName = StringTranslation.AddFormatInfo(Configuration.SceneSaveNameTemplate, "", "");
+                        GUILayout.Label(" ==> ");
+                        GUILayout.TextField(Quicksave.SCENE_QS_PREFIX + newName);
                         GUILayout.EndHorizontal();
                         GUILayout.Space(20);
                         GUILayout.EndVertical();
@@ -327,9 +336,12 @@ namespace AutoQuickSaveSystem
                         GUILayout.BeginHorizontal();
                         QuicksaveIntervalToggle(Configuration.QuickSave_Interval.CUSTOM, "Custom (minutes)");
                         GUILayout.FlexibleSpace();
+
+                        GUI.enabled = (Configuration.QuicksaveInterval == Configuration.QuickSave_Interval.CUSTOM) ;
                         String sCustomInterval = GUILayout.TextField(Configuration.CustomQuicksaveInterval.ToString(), STYLE_CONFIG_TEXTFIELD);
                         GUILayout.Space(CONFIG_TEXTFIELD_RIGHT_MARGIN);
                         Configuration.CustomQuicksaveInterval = ParseInt(sCustomInterval);
+                        GUI.enabled = true;
                         GUILayout.EndHorizontal();
 
                         GUILayout.EndVertical();
@@ -389,10 +401,10 @@ namespace AutoQuickSaveSystem
                         GUI.enabled = Configuration.saveVesselInEditor;
                         GUILayout.BeginHorizontal();
                         GUILayout.Label("Time interval between autosaves (in seconds): ");
-                        String seditorTimeToSave = GUILayout.TextField(Configuration.editorTimeIntervalToSave.ToString(), STYLE_CONFIG_TEXTFIELD);
+                        String sEditorTimeToSave = GUILayout.TextField(Configuration.editorTimeIntervalToSave.ToString(), STYLE_CONFIG_TEXTFIELD);
                         GUILayout.Space(CONFIG_TEXTFIELD_RIGHT_MARGIN);
-                        Configuration.editorTimeIntervalToSave = ParseInt(seditorTimeToSave);
-                        GUILayout.EndHorizontal();
+                        Configuration.editorTimeIntervalToSave = ParseInt(sEditorTimeToSave);
+                        GUILayout.EndHorizontal();                        
 
                         GUI.enabled = true;
                         GUILayout.EndVertical();

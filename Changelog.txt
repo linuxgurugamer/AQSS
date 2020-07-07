@@ -1,5 +1,9 @@
 Changelog
 
+0.0.4
+	Added template for Scenequicksave
+	Fixed double audio
+	Fixed typo in custom quicksave value in config file
 
 0.0.3
 	Added automatic saving of vessels in the editor

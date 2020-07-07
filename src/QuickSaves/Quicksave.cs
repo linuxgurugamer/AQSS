@@ -21,6 +21,8 @@ namespace AutoQuickSaveSystem
         {
             instance = this;
             DontDestroyOnLoad(this);
+            Configuration.Init();
+            Configuration.Load();
             RestartLoop();
         }
 
@@ -86,7 +88,7 @@ namespace AutoQuickSaveSystem
                             }
                             break;
                         default:
-                            Log.Error("invalid quicksave interval ignored");
+                            Log.Error("invalid QuickSave_Interval ignored");
 
                             break;
                     }
