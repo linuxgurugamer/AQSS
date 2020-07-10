@@ -49,7 +49,7 @@ namespace AutoQuickSaveSystem
             Init();
             Load();
         }
-        const string DEFAULT_TEMPLATE = "_[year0]_[day0] [hour0]:[min0]";
+        const string DEFAULT_TEMPLATE = "[year0]_[day0]-[hour0]:[min0]";
         const string DEFAULT_LAUNCH_TEMPLATE = DEFAULT_TEMPLATE + ":[sec0]";
         public static void Init()
         {

@@ -54,6 +54,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AssemblyVersion.tt</DependentUpon>
     </Compile>
+    <Compile Include="gui\TemplateSelectionGui.cs" />
     <Compile Include="InstallChecker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="gui\MainMenuGui.cs" />
@@ -66,8 +67,8 @@
     <Compile Include="SaveConfirmationSound\SaveConfirmationSound.cs" />
     <Compile Include="QuickSaves\SaveOnlaunch.cs" />
     <Compile Include="QuickSaves\StringTranslation.cs" />
-    <Compile Include="util\BlockingQueue.cs" />
     <Compile Include="util\Configuration.cs" />
+    <Compile Include="util\Constants.cs" />
     <Compile Include="util\io\ConfigNodeIO.cs" />
     <Compile Include="util\io\FileOperations.cs" />
     <Compile Include="util\Log.cs" />

@@ -1,5 +1,12 @@
 Changelog
 
+0.0.5 
+	Added [cnt] tokens
+	Updated template help for cnt token
+	Added template selection window
+	Added several default templates
+	Updated default templates slightly
+
 0.0.4
 	Added template for Scenequicksave
 	Fixed double audio

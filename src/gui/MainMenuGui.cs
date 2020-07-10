@@ -18,6 +18,8 @@ namespace AutoQuickSaveSystem
         private const int WIDTH = 450;
         private const int CONFIG_TEXTFIELD_RIGHT_MARGIN = 165;
 
+        private const int TEMPLATE_WIN_BUTTON_WIDTH = 150;
+
         private Rect windowBounds = new Rect(0, 0, WIDTH, 0);
         private Rect templateInfoBounds = new Rect(0, 0, WIDTH, 0);
         private Vector2 audioListscrollPosition = Vector2.zero;
@@ -69,8 +71,14 @@ namespace AutoQuickSaveSystem
         void Toggle()
         {
             visible = !visible;
+            if (!visible)
+            {
+                if (TemplateSelectionGui.templateGui != null)
+                    Destroy(TemplateSelectionGui.templateGui);
+            }
             files = null;
             selectedAudio = -1;
+            // Always load the configuration, this makes sure the saved config is being used
             Configuration.Load();
         }
         protected void OnGUI()
@@ -294,8 +302,20 @@ namespace AutoQuickSaveSystem
                         if (GUILayout.Button("Template Info"))
                             showTemplateInfo = !showTemplateInfo;
                         GUILayout.EndHorizontal();
+                        GUILayout.BeginHorizontal();
+                        GUILayout.Label("(Click the Launch/Quicksave/Scenesave template button to select, or enter your own template)");
+                        GUILayout.EndHorizontal();
 
-                        GUILayout.Label("Launch template: ", STYLE_CONFIG_BACKUP_PATH_LABEL);
+                        GUI.enabled = (TemplateSelectionGui.templateGui == null);
+                        var buttonRect = GUILayoutUtility.GetRect(new GUIContent("Launch Template"), GUI.skin.button,  GUILayout.Width(TEMPLATE_WIN_BUTTON_WIDTH));
+
+                        if (GUILayout.Button("Launch Template", GUILayout.Width(TEMPLATE_WIN_BUTTON_WIDTH)))
+                        {
+                            TemplateSelectionGui.StartWindow("Launch", Configuration.LaunchNameTemplate, windowBounds, buttonRect);
+                            TemplateSelectionGui.templateGui = gameObject.AddComponent<TemplateSelectionGui>();
+                        }
+                        GUI.enabled = true;
+                        //GUILayout.Label("Launch template: ", STYLE_CONFIG_BACKUP_PATH_LABEL);
                         Configuration.LaunchNameTemplate = GUILayout.TextField(Configuration.LaunchNameTemplate);
                         GUILayout.BeginHorizontal();
                         string newName = StringTranslation.AddFormatInfo(Configuration.LaunchNameTemplate, "", "");
@@ -303,7 +323,15 @@ namespace AutoQuickSaveSystem
                         GUILayout.TextField(Quicksave.LAUNCH_QS_PREFIX + newName);
                         GUILayout.EndHorizontal();
 
-                        GUILayout.Label("Quicksave template: ", STYLE_CONFIG_BACKUP_PATH_LABEL);
+                        GUI.enabled = (TemplateSelectionGui.templateGui == null);
+                        buttonRect = GUILayoutUtility.GetRect(new GUIContent("Quicksave Template"), GUI.skin.button, GUILayout.Width(TEMPLATE_WIN_BUTTON_WIDTH));
+                        if (GUILayout.Button("Quicksave Template", GUILayout.Width(TEMPLATE_WIN_BUTTON_WIDTH)))
+                        {
+                            TemplateSelectionGui.StartWindow("Quicksave", Configuration.QuickSaveNameTemplate, windowBounds, buttonRect);
+                            TemplateSelectionGui.templateGui = gameObject.AddComponent<TemplateSelectionGui>();
+                        }
+                        GUI.enabled = true;
+                        //GUILayout.Label("Quicksave template: ", STYLE_CONFIG_BACKUP_PATH_LABEL);
                         Configuration.QuickSaveNameTemplate = GUILayout.TextField(Configuration.QuickSaveNameTemplate);
                         GUILayout.BeginHorizontal();
                         newName = StringTranslation.AddFormatInfo(Configuration.QuickSaveNameTemplate, "", "");
@@ -311,7 +339,15 @@ namespace AutoQuickSaveSystem
                         GUILayout.TextField(Quicksave.AUTO_QS_PREFIX + newName);
                         GUILayout.EndHorizontal();
 
-                        GUILayout.Label("Scenesave template: ", STYLE_CONFIG_BACKUP_PATH_LABEL);
+                        GUI.enabled = (TemplateSelectionGui.templateGui == null);
+                        buttonRect = GUILayoutUtility.GetRect(new GUIContent("Scenesave Template"), GUI.skin.button, GUILayout.Width(TEMPLATE_WIN_BUTTON_WIDTH));
+                        if (GUILayout.Button("Scenesave Template", GUILayout.Width(TEMPLATE_WIN_BUTTON_WIDTH)))
+                        {
+                            TemplateSelectionGui.StartWindow("Scenesave", Configuration.SceneSaveNameTemplate, windowBounds, buttonRect);
+                            TemplateSelectionGui.templateGui = gameObject.AddComponent<TemplateSelectionGui>();
+                        }
+                        GUI.enabled = true;
+                        //GUILayout.Label("Scenesave template: ", STYLE_CONFIG_BACKUP_PATH_LABEL);
                         Configuration.SceneSaveNameTemplate = GUILayout.TextField(Configuration.SceneSaveNameTemplate);
                         GUILayout.BeginHorizontal();
                         newName = StringTranslation.AddFormatInfo(Configuration.SceneSaveNameTemplate, "", "");
@@ -481,6 +517,13 @@ namespace AutoQuickSaveSystem
 
             "sec        Short version of sec, no leading zeroes\n" +
             "sec0       Long version of sec, with zero padding to make it 2 digits long\n\n" +
+            
+            "cnt        A simple counter, incrementing\n"+
+            "cnt0       A simple counter with zero padding.  This is a special case, it\n"+
+            "             will zero-pad the number to make it as long as the number of\n" +
+            "             zeroes specified.\n"+
+            "             When using a counter, all other numeric tokens need to be\n"+
+            "             zero-padded\n\n"+
 
             "The following will only be used if there is an active vessel, otherwise they\n" +
             "will simply be deleted\n\n" +

@@ -41,7 +41,7 @@ namespace AutoQuickSaveSystem
     internal class InstallChecker : MonoBehaviour
     {
         private const string MODNAME = "Auto Quick Save System";
-        private const string FOLDERNAME = "AutoQuickSaveSystem";
+        internal const string FOLDERNAME = "AutoQuickSaveSystem";
         private const string EXPECTEDPATH = FOLDERNAME + "/Plugins";
 
         protected void Start()

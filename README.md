@@ -36,3 +36,11 @@ Special note regarding Quicksave on launch
 
 This depends on the initial staging event of a newly launched vessel.  What this means is that if you launch a rover and drive it away, no quicksave will be done of that launch
 
+Note regarding the voices
+There are a number of website which n do a text-to-speech output.  A few which provide good output are:
+		https://www.naturalreaders.com/online/
+		http://www.fromtexttospeech.com/
+		https://ttsmp3.com/
+		https://www.text2voice.org/
+
+

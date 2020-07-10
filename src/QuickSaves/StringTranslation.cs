@@ -1,10 +1,13 @@
-﻿// This file copied from MagiCore
+﻿// Much of this file copied from MagiCore
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using KSP.Localization;
+
+using static AutoQuickSaveSystem.AutoQuickSaveSystem;
 
 namespace AutoQuickSaveSystem
 {
@@ -74,6 +77,11 @@ namespace AutoQuickSaveSystem
         public static string ReplaceStandardTokens(string sourceString)
         {
             string str = sourceString;
+
+            bool counterFound = str.Contains("cnt");
+
+
+
             str = ReplaceToken(str, "UT", Planetarium.fetch != null ? Math.Round(Planetarium.GetUniversalTime()).ToString() : "0");
             //str = ReplaceToken(str, "save", HighLogic.SaveFolder != null && HighLogic.SaveFolder.Trim().Length > 0 ? HighLogic.SaveFolder : "NA");
             //str = ReplaceToken(str, "version", Versioning.GetVersionString());
@@ -86,15 +94,20 @@ namespace AutoQuickSaveSystem
             int[] times = { 0, 0, 0, 0, 0 };
             if (Planetarium.fetch != null)
                 times = ConvertUT(Planetarium.GetUniversalTime());
-            str = ReplaceToken(str, "year", times[0].ToString());
+            if (!counterFound)
+                str = ReplaceToken(str, "year", times[0].ToString());
             str = ReplaceToken(str, "year0", times[0].ToString("D3"));
-            str = ReplaceToken(str, "day", times[1].ToString());
+            if (!counterFound)
+                str = ReplaceToken(str, "day", times[1].ToString());
             str = ReplaceToken(str, "day0", times[1].ToString("D3"));
-            str = ReplaceToken(str, "hour", times[2].ToString());
+            if (!counterFound)
+                str = ReplaceToken(str, "hour", times[2].ToString());
             str = ReplaceToken(str, "hour0", times[2].ToString("D2"));
-            str = ReplaceToken(str, "min", times[3].ToString());
+            if (!counterFound)
+                str = ReplaceToken(str, "min", times[3].ToString());
             str = ReplaceToken(str, "min0", times[3].ToString("D2"));
-            str = ReplaceToken(str, "sec", times[4].ToString());
+            if (!counterFound)
+                str = ReplaceToken(str, "sec", times[4].ToString());
             str = ReplaceToken(str, "sec0", times[4].ToString("D2"));
 
 
@@ -105,8 +118,64 @@ namespace AutoQuickSaveSystem
 
             str = ReplaceToken(str, "MET", time);
 
+            if (str.Contains("cnt"))
+            {
+                int zeroes = 0;
+                while (str.Contains("cnt" + Repeated('0', zeroes + 1)))
+                    zeroes++;
+                string token = "cnt" + Repeated('0', zeroes);
+
+                string searchstr = ReplaceToken(str, token, "*.sfs");
+                int beginning = str.IndexOf(token);
+                string[] files = Directory.GetFiles(SaveDir, searchstr);
+                int cnt = files.Length;
+                for (int i = 0; i < files.Length; i++)
+                {
+                    int z = zeroes;
+                    string counterStr = files[i].Substring(SaveDir.Length + beginning);
+                    if (zeroes == 0)
+                    {
+                        while (z < counterStr.Length && Char.IsDigit(counterStr[z]))
+                            z++;
+                    }
+                    counterStr = counterStr.Substring(0, z);
+
+                    int x = 0;
+                    int.TryParse(counterStr, out x);
+                    cnt = Math.Max(cnt, x);
+                }
+                str = ReplaceToken(str, token, (cnt + 1).ToString("D" + zeroes.ToString()));
+            }
             return str;
         }
+
+        /// <summary>
+        /// Repeat a string a certain number of times
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="i"></param>
+        /// <returns></returns>
+        static string Repeated(char value, int count)
+        {
+            return new string(value, count);
+#if false
+            return new StringBuilder(value.Length * count).Insert(0, value, count).ToString();
+#endif
+#if false
+            string str = "";
+            while (i-- > 0)
+                str += s;
+            return str;
+#endif
+        }
+        public static string SaveDir
+        {
+            get
+            {
+                return Path.GetFullPath(Path.Combine(Path.Combine(KSPUtil.ApplicationRootPath, "saves"), HighLogic.SaveFolder));
+            }
+        }
+
 
         public static int[] ConvertUT(double UT)
         {

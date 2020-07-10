@@ -9,8 +9,6 @@ namespace AutoQuickSaveSystem
     [KSPAddon(KSPAddon.Startup.SpaceCentre, true)]
     public class AutoQuickSaveSystem : MonoBehaviour
     {
-        //public static Configuration Configuration = new Configuration();
-
 
         private MainMenuGui gui;
 

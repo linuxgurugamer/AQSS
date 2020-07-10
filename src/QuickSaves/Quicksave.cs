@@ -7,15 +7,15 @@ using static AutoQuickSaveSystem.AutoQuickSaveSystem;
 namespace AutoQuickSaveSystem
 {
     [KSPAddon(KSPAddon.Startup.MainMenu, true)]
-    internal class Quicksave : MonoBehaviour
+    public class Quicksave : MonoBehaviour
     {
         internal static Quicksave instance;
 
         static public string dateFormat = "yyyy-MM-dd--HH-mm-ss";
         static internal float lastBackup = 0;
-        internal const string LAUNCH_QS_PREFIX = "LaunchQSave_";
-        internal const string AUTO_QS_PREFIX = "AutoQSave_";
-        internal const string SCENE_QS_PREFIX = "SceneQSave_";
+        public const string LAUNCH_QS_PREFIX = "LaunchQSave_";
+        public const string AUTO_QS_PREFIX = "AutoQSave_";
+        public const string SCENE_QS_PREFIX = "SceneQSave_";
 
         protected void Start()
         {
@@ -110,6 +110,7 @@ namespace AutoQuickSaveSystem
             DoQuicksave(AUTO_QS_PREFIX + Configuration.QuickSaveNameTemplate, "AutoQuickSave to");
             setTime = DateTime.Now;
         }
+
         internal static void DoQuicksave(string template, string message)
         {
             string newName = StringTranslation.AddFormatInfo(template, "", dateFormat);
