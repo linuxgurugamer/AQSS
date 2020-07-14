@@ -1,5 +1,8 @@
 Changelog
 
+0.1.0
+	Release
+
 0.0.5 
 	Added [cnt] tokens
 	Updated template help for cnt token
