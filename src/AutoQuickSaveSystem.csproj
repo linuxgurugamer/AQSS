@@ -71,7 +71,6 @@
     <Compile Include="util\Constants.cs" />
     <Compile Include="util\io\ConfigNodeIO.cs" />
     <Compile Include="util\io\FileOperations.cs" />
-    <Compile Include="util\Log.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AssemblyVersion.tt">

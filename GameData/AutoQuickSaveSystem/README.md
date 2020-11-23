@@ -43,4 +43,5 @@ There are a number of website which n do a text-to-speech output.  A few which p
 		https://ttsmp3.com/
 		https://www.text2voice.org/
 
-
+Special note regarding the S.A.V.E mod
+The S.A.V.E. mod renames save files and quicksave files.  You need to disable the autosaves to prevent it from interfering with this mod

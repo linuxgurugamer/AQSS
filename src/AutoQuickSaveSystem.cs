@@ -12,7 +12,7 @@ namespace AutoQuickSaveSystem
 
         private MainMenuGui gui;
 
-        public static KSP_Log.Log Log;
+        public static KSP_Log.Log Log = null;
 
         public AutoQuickSaveSystem()
         {
@@ -28,7 +28,11 @@ namespace AutoQuickSaveSystem
 
         public void Start()
         {
+#if DEBUG
             Log.SetLevel(Log.LEVEL.INFO);
+#else
+            Log.SetLevel(Log.LEVEL.ERROR);
+#endif
             Log.Info("Start");
             Configuration.StartUp();
             ConfigNodeIO.LoadData();
