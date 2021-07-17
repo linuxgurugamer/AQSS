@@ -333,14 +333,12 @@ namespace AutoQuickSaveSystem
             node.AddValue("quicksaveOnSceneChange", Configuration.QuicksaveOnSceneChange);
 
 
-            node.AddValue("quickSaveLaunchNameTemplate", Configuration.LaunchNameTemplate);
-
             node.AddValue("quicksaveInterval", (int)Configuration.QuicksaveInterval);
+            Log.Info("SaveConfiguration, Configuration.QuicksaveInterval: " + Configuration.QuicksaveInterval);
             node.AddValue("quickSaveNameTemplate", Configuration.QuickSaveNameTemplate);
             node.AddValue("launchNameTemplate", Configuration.LaunchNameTemplate);
             node.AddValue("sceneSaveNameTemplate", Configuration.SceneSaveNameTemplate);
 
-            Log.Info("CustomQuicksaveInterval: " + Configuration.CustomQuicksaveInterval);
             node.AddValue("customQuicksaveInterval", Configuration.CustomQuicksaveInterval);
 
             
@@ -378,18 +376,16 @@ namespace AutoQuickSaveSystem
                     Configuration.QuicksaveOnSceneChange = bool.Parse(SafeLoad(node, "quicksaveOnSceneChange", Configuration.QuicksaveOnSceneChange));
 
                     
-                    Configuration.LaunchNameTemplate = SafeLoad(node, "quickSaveLaunchNameTemplate", Configuration.LaunchNameTemplate);
 
                     Configuration.QuicksaveInterval = (Configuration.QuickSave_Interval)int.Parse(SafeLoad(node, "quicksaveInterval", (int)Configuration.QuicksaveInterval));
+                    Log.Info("LoadConfiguration 1, Configuration.QuicksaveInterval: " + Configuration.QuicksaveInterval);
+                    Configuration.LaunchNameTemplate = SafeLoad(node, "quickSaveNameTemplate", Configuration.QuickSaveNameTemplate);
 
-                    Configuration.LaunchNameTemplate = SafeLoad(node, "launchNameTemplate", Configuration.QuickSaveNameTemplate);
+                    Configuration.LaunchNameTemplate = SafeLoad(node, "launchNameTemplate", Configuration.LaunchNameTemplate);
                     Configuration.SceneSaveNameTemplate = SafeLoad(node, "sceneSaveNameTemplate", Configuration.SceneSaveNameTemplate);
 
-                    
-                    Configuration.QuickSaveNameTemplate = SafeLoad(node, "quickSaveNameTemplate", Configuration.QuickSaveNameTemplate);
-                    Configuration.CustomQuicksaveInterval = int.Parse(SafeLoad(node, "customQuicksaveInterval", Configuration.CustomQuicksaveInterval));
+                    Configuration.CustomQuicksaveInterval= int.Parse(SafeLoad(node, "customQuicksaveInterval", (int)Configuration.CustomQuicksaveInterval));
 
-                    
                     Configuration.MinTimeBetweenQuicksaves = int.Parse(SafeLoad(node, "minTimeBetweenQuicksaves", Configuration.MinTimeBetweenQuicksaves));
 
                     Configuration.DaysToKeepQuicksaves = int.Parse(SafeLoad(node, "daysToKeepQuicksaves", Configuration.DaysToKeepQuicksaves));

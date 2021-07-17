@@ -28,11 +28,6 @@ namespace AutoQuickSaveSystem
 
         public void Start()
         {
-#if DEBUG
-            Log.SetLevel(Log.LEVEL.INFO);
-#else
-            Log.SetLevel(Log.LEVEL.ERROR);
-#endif
             Log.Info("Start");
             Configuration.StartUp();
             ConfigNodeIO.LoadData();

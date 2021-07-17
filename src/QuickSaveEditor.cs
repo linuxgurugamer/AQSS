@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using KSP.Localization;
 using UnityEngine;
 
@@ -48,12 +49,19 @@ namespace AutoQuickSaveSystem
 
 		IEnumerator AutoSaveShip()
 		{
+			Log.Info("Starting Coroutein AutoSaveShip");
 			while (true)
 			{
 				yield return new WaitForSeconds(Configuration.editorTimeIntervalToSave);
-				ShipConstruction.SaveShip(shipFilename);
+				Log.Info("AutoSaveShip, after: "+ Configuration.editorTimeIntervalToSave);
+				List<Part> parts = EditorLogic.fetch.ship != null ? EditorLogic.fetch.ship.Parts : new List<Part>();
+
+				if (parts.Count > 0)
+				{
+					Log.Info("AutoSaveShip, parts.Count: " + parts.Count);
+					ShipConstruction.SaveShip(shipFilename);
+				}
 			}
-			Log.Info("autoSaveShip: end");
 		}
 
 		void OnDestroy()

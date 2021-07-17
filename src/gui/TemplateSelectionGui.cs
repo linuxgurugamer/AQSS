@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using KSP;
 using UnityEngine;
-using System.IO;
-using System.Reflection;
-using KSP.UI.Screens;
 
 using ClickThroughFix;
-using ToolbarControl_NS;
 using static AutoQuickSaveSystem.AutoQuickSaveSystem;
-using System.Runtime.CompilerServices;
 
 namespace AutoQuickSaveSystem
 {

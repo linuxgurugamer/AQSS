@@ -44,13 +44,14 @@ namespace AutoQuickSaveSystem
         public static String SoundLocation { get; set; } = AUDIO_DIR + "click";
         public static int MinimumTimeBetweenSounds { get; set; } = 100; // Milliseconds
 
+        const string DEFAULT_TEMPLATE = "[year0]_[day0]-[hour0]:[min0]";
+        const string DEFAULT_LAUNCH_TEMPLATE = DEFAULT_TEMPLATE + ":[sec0]";
+
         public static void StartUp()
         {
             Init();
             Load();
         }
-        const string DEFAULT_TEMPLATE = "[year0]_[day0]-[hour0]:[min0]";
-        const string DEFAULT_LAUNCH_TEMPLATE = DEFAULT_TEMPLATE + ":[sec0]";
         public static void Init()
         {
             LogLevel = Log.LEVEL.INFO;

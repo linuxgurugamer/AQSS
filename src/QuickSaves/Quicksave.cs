@@ -36,6 +36,7 @@ namespace AutoQuickSaveSystem
         static DateTime setTime = DateTime.Now;
         IEnumerator QuickSaveLoop()
         {
+            Log.Info("Starting QuickSaveLoop");
             float sleepTime = 1f;
             while (true)
             {
@@ -106,7 +107,7 @@ namespace AutoQuickSaveSystem
                 setTime.AddSeconds(60);
                 return;
             }
-
+            Log.Info("QuicksaveGame, stacktrace: " + Environment.StackTrace);
             DoQuicksave(AUTO_QS_PREFIX + Configuration.QuickSaveNameTemplate, "AutoQuickSave to");
             setTime = DateTime.Now;
         }

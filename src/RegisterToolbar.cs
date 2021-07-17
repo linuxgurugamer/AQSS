@@ -20,11 +20,12 @@ namespace AutoQuickSaveSystem
     {
         protected void Awake()
         {
-            AutoQuickSaveSystem.Log = new KSP_Log.Log("AQSS"
 #if DEBUG
-                , KSP_Log.Log.LEVEL.INFO
+            AutoQuickSaveSystem.Log = new KSP_Log.Log("AQSS", KSP_Log.Log.LEVEL.INFO);
+#else
+            AutoQuickSaveSystem.Log = new KSP_Log.Log("AQSS", KSP_Log.Log.LEVEL.ERROR);
 #endif
-                );
+                
         }
     }
 

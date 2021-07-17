@@ -1,5 +1,17 @@
 Changelog
 
+0.1.0.3
+	Added AssemblyFileVersion
+	Fixed edge case in editor causing a CTD:
+		Enable automatic ship saving in editor
+		Create new ship and add root part
+		Delete root part
+		Wait for next save
+	Fixed loading options for the quick save interval
+
+0.1.0.2
+	Cleaned up the save/load code, one item was duplicated and others not defined properly
+
 0.1.0.1
 	Removed log spam
 
