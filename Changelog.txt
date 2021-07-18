@@ -1,5 +1,8 @@
 Changelog
 
+0.1.0.4
+	Changed DLL name for better CKAN compatibility
+
 0.1.0.3
 	Added AssemblyFileVersion
 	Fixed edge case in editor causing a CTD:
