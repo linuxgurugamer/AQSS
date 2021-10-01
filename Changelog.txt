@@ -1,5 +1,8 @@
 Changelog
 
+0.1.0.5
+	Added check to quicksave that the loadedscene is actually a game scene
+
 0.1.0.4
 	Changed DLL name for better CKAN compatibility
 

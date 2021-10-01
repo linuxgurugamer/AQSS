@@ -114,26 +114,32 @@ namespace AutoQuickSaveSystem
 
         internal static void DoQuicksave(string template, string message)
         {
-            string newName = StringTranslation.AddFormatInfo(template, "", dateFormat);
-            if (newName != null && newName.Length > 0)
+            if (HighLogic.LoadedScene == GameScenes.SPACECENTER ||
+                HighLogic.LoadedScene == GameScenes.EDITOR ||
+                HighLogic.LoadedScene == GameScenes.FLIGHT ||
+                HighLogic.LoadedScene == GameScenes.TRACKSTATION)
             {
-                // First we need to acquire the current game status
-                Game currentGame = HighLogic.CurrentGame.Updated();
+                string newName = StringTranslation.AddFormatInfo(template, "", dateFormat);
+                if (newName != null && newName.Length > 0)
+                {
+                    // First we need to acquire the current game status
+                    Game currentGame = HighLogic.CurrentGame.Updated();
 
-                // If we are not at the space center, we have to reset the startScene to flight,
-                // because calling Updated() sets it to space center.
-                if (HighLogic.LoadedScene == GameScenes.FLIGHT)
-                    currentGame.startScene = GameScenes.FLIGHT;
+                    // If we are not at the space center, we have to reset the startScene to flight,
+                    // because calling Updated() sets it to space center.
+                    if (HighLogic.LoadedScene == GameScenes.FLIGHT)
+                        currentGame.startScene = GameScenes.FLIGHT;
 
-                string filename = GamePersistence.SaveGame(currentGame, newName, HighLogic.SaveFolder, SaveMode.OVERWRITE);
+                    string filename = GamePersistence.SaveGame(currentGame, newName, HighLogic.SaveFolder, SaveMode.OVERWRITE);
 
-                lastBackup = Time.realtimeSinceStartup;
+                    lastBackup = Time.realtimeSinceStartup;
 
-                ScreenMessages.PostScreenMessage(message + ": " + newName);
+                    ScreenMessages.PostScreenMessage(message + ": " + newName);
 
+                }
+
+                QuicksaveCleanup.Cleanup();
             }
-
-            QuicksaveCleanup.Cleanup();
         }
     }
 
