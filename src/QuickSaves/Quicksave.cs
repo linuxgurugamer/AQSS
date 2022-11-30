@@ -107,7 +107,7 @@ namespace AutoQuickSaveSystem
                 setTime.AddSeconds(60);
                 return;
             }
-            Log.Info("QuicksaveGame, stacktrace: " + Environment.StackTrace);
+            //Log.Info("QuicksaveGame, stacktrace: " + Environment.StackTrace);
             DoQuicksave(AUTO_QS_PREFIX + Configuration.QuickSaveNameTemplate, "AutoQuickSave to");
             setTime = DateTime.Now;
         }
