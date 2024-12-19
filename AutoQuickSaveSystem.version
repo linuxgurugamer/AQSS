@@ -1,6 +1,6 @@
 {
   "NAME": "AutoQuickSaveSystem",
-  "URL": "http://ksp.spacetux.net/avc/AutoQuickSaveSystem",
+  "URL": "https://raw.githubusercontent.com/linuxgurugamer/AutoQuickSaveSystem/refs/heads/master/AutoQuickSaveSystem.version",
   "DOWNLOAD": "https://github.com/linuxgurugamer/AutoQuickSaveSystem/releases",
   "GITHUB": {
     "USERNAME": "linuxgurugamer",
@@ -10,7 +10,7 @@
     "MAJOR": 0,
     "MINOR": 1,
     "PATCH": 0,
-    "BUILD": 6
+    "BUILD": 7
   },
   "KSP_VERSION": {
     "MAJOR": 1,

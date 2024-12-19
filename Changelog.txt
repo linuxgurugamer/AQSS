@@ -1,5 +1,9 @@
 Changelog
 
+0.1.0.7
+	Updated README
+	Updated .version file to point to github for version file checks
+
 0.1.0.6 
 	Cleaned up some unnecessary logging
 	Fixed path for loading images (broken by new launcher)

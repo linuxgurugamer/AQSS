@@ -37,11 +37,52 @@ Special note regarding Quicksave on launch
 This depends on the initial staging event of a newly launched vessel.  What this means is that if you launch a rover and drive it away, no quicksave will be done of that launch
 
 Note regarding the voices
-There are a number of website which n do a text-to-speech output.  A few which provide good output are:
-		https://www.naturalreaders.com/online/
-		http://www.fromtexttospeech.com/
-		https://ttsmp3.com/
-		https://www.text2voice.org/
+
 
 Special note regarding the S.A.V.E mod
 The S.A.V.E. mod renames save files and quicksave files.  You need to disable the autosaves to prevent it from interfering with this mod
+
+Availability
+
+Github: https://github.com/linuxgurugamer/AutoQuickSaveSystem
+Download: https://spacedock.info/mod/2475/AQSS - Auto-Quick-Save-System
+License: GPLv3
+Now available in CKAN
+
+Questions & Answers
+
+How is this different from S.A.V.E.  ?
+S.A.V.E does full backups of the save, including craft files, and whatever else is in the save directory.  This does a quicksave, meaning that it quicksaves the game into a new persistent sfs & meta file.  Quicksaves can be loaded immediately inside the game, S.A.V.E. backups can't, you need to restore a backup, which restores everything from the backup for the selected save
+Dependencies
+
+Click Through Blocker
+ToolbarController
+SpaceTuxLibrary
+ 
+
+Still in beta, and already reviewed by Kottabos Games:
+
+https://youtu.be/1tO10-HU-UA
+
+
+Main config window
+
+https://i.imgur.com/kxbJ3RF.png
+
+ 
+
+Audio configuration window
+
+https://i.imgur.com/Uus7Alm.png
+
+ 
+
+Template Info Window
+
+https://i.imgur.com/dJ086Q6.png
+
+ 
+
+Acknowledgements
+
+This was originally going to be part of the S.A.V.E. mod, made by @Nereid.  After I had written it, I found that @Nereid had updated his Github repo, which seemed to indicate that he was about to  update the mod.  So I pulled all the code related to backups out, and made this a new mod.  The SAVE mod has a GPL license, so I am using that to avoid any possible license issues
