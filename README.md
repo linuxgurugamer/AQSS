@@ -12,7 +12,7 @@ Audio file playable when a quicksave is done
 
 Usage
 
-Click the button [buttonImage]
+Click the button https://i.imgur.com/oiecnh9.png
 
 There are two buttons, one for the quicksave options, and one for the Sound Options
 
@@ -80,6 +80,7 @@ https://i.imgur.com/Uus7Alm.png
 Template Info Window
 
 https://i.imgur.com/dJ086Q6.png
+
 
  
 

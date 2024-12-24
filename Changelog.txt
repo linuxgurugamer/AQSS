@@ -1,5 +1,9 @@
 Changelog
 
+0.1.0.8
+	Updated README with fixed link
+	Updated version file 
+
 0.1.0.7
 	Updated README
 	Updated .version file to point to github for version file checks
